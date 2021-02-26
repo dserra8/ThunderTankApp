@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="homeViewModel"
+            type="com.example.thundertank.home.HomeScreenViewModel" />
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#FFFFFF"
+        android:backgroundTint="#55A5EC"
+        tools:context=".home.HomeScreenFragment">
+
+        <TextView
+            android:id="@+id/phText"
+            style="@style/mainBox"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="@string/ph_level_text"
+            app:layout_constraintBaseline_toBaselineOf="@+id/phNum"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/tempText"
+            style="@style/mainBox"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="@string/temperature_text"
+            app:layout_constraintBaseline_toBaselineOf="@+id/tempNum"
+            app:layout_constraintStart_toStartOf="@+id/phText" />
+
+        <TextView
+            android:id="@+id/saltText"
+            style="@style/mainBox"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="@string/salinity_text"
+            app:layout_constraintBaseline_toBaselineOf="@+id/saltNum"
+            app:layout_constraintStart_toStartOf="@+id/tempText" />
+
+        <TextView
+            android:id="@+id/clarityText"
+            style="@style/mainBox"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="@string/clarity_text"
+            app:layout_constraintBaseline_toBaselineOf="@+id/clarityNum"
+            app:layout_constraintStart_toStartOf="@+id/saltText" />
+
+        <TextView
+            android:id="@+id/phNum"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="@{@string/level_format(homeViewModel.pH)}"
+            app:layout_constraintBottom_toTopOf="@+id/tempNum"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/phText"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tempNum"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="@{@string/level_format(homeViewModel.temp)}"
+            app:layout_constraintBottom_toTopOf="@+id/saltNum"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/tempText"
+            app:layout_constraintTop_toBottomOf="@+id/phNum" />
+
+        <TextView
+            android:id="@+id/saltNum"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="@{@string/level_format(homeViewModel.salt)}"
+            app:layout_constraintBottom_toTopOf="@+id/clarityNum"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/saltText"
+            app:layout_constraintTop_toBottomOf="@+id/tempNum" />
+
+        <TextView
+            android:id="@+id/clarityNum"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:text="@{@string/level_format(homeViewModel.clarity)}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/clarityText"
+            app:layout_constraintTop_toBottomOf="@+id/saltNum" />
+
+        <TextView
+            android:id="@+id/tankName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="FishTankName"
+            android:textColor="#060C35"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

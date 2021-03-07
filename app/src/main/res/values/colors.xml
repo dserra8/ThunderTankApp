@@ -8,4 +8,11 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="aqua">#0E4C30</color>
+    <color name="neon_green">#0FE118</color>
+    <color name="darker_red">#7A0808</color>
+    <color name="light_red">#EC0909</color>
+    <color name="transparent_green">#80088C0E</color>
+    <color name="navy_blue">#89DD00</color>
+    <color name="main_background_color">#55A5EC</color>
+    <color name="dark_blue">#164268</color>
 </resources>

@@ -13,5 +13,20 @@
     <string name="temperature_text">Temperature</string>
     <string name="salinity_text">Salinity</string>
     <string name="clarity_text">Clarity</string>
-    <string name="level_format">%d</string>
+    <string name="pH_format">%.1f pH</string>
+    <string name="temp_format">%.1f \u2109</string>
+    <string name="clarity_format">%.1f mg/L</string>
+    <string name="salt_format">%.1f pH</string>
+    <string name="welcome_text">Welcome</string>
+    <string name="ChooseFish">Choose the fish you own from our list!</string>
+    <string name="ChooseFishManually">Or manually setup your fish!</string>
+    <string name="BettaPresetText">Betta Fish</string>
+    <string name="GoldFishPresetText">Gold Fish</string>
+    <string name="AngelFishPresetText">Angel Fish</string>
+    <string name="GuppiesPresetText">Guppies</string>
+    <string name="MolliesPresetText">Mollies</string>
+    <string name="NeonTetraPresetText">Neon Treta</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
 </resources>

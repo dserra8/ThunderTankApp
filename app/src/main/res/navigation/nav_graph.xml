@@ -7,6 +7,11 @@
     <fragment
         android:id="@+id/homeScreenFragment"
         android:name="com.example.thundertank.home.HomeScreenFragment"
-        android:label="home_screen"
+        android:label="Home"
         tools:layout="@layout/home_screen" />
+    <fragment
+        android:id="@+id/setupScreen1Fragment"
+        android:name="com.example.thundertank.setup.SetupScreen1Fragment"
+        android:label="Add New Fish"
+        tools:layout="@layout/fragment_setup_screen1" />
 </navigation>

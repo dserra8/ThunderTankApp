@@ -8,110 +8,184 @@
             name="homeViewModel"
             type="com.example.thundertank.home.HomeScreenViewModel" />
     </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
 
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#FFFFFF"
-        android:backgroundTint="#55A5EC"
+        android:background="@color/main_background_color"
         tools:context=".home.HomeScreenFragment">
-
-        <TextView
-            android:id="@+id/phText"
-            style="@style/mainBox"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:text="@string/ph_level_text"
-            app:layout_constraintBaseline_toBaselineOf="@+id/phNum"
-            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/tempText"
             style="@style/mainBox"
-            android:layout_width="150dp"
+            android:layout_width="@dimen/box_width"
             android:layout_height="wrap_content"
             android:text="@string/temperature_text"
             app:layout_constraintBaseline_toBaselineOf="@+id/tempNum"
-            app:layout_constraintStart_toStartOf="@+id/phText" />
+            app:layout_constraintEnd_toStartOf="@+id/tempProgressBar"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/saltText"
             style="@style/mainBox"
-            android:layout_width="150dp"
+            android:layout_width="@dimen/box_width"
             android:layout_height="wrap_content"
             android:text="@string/salinity_text"
             app:layout_constraintBaseline_toBaselineOf="@+id/saltNum"
-            app:layout_constraintStart_toStartOf="@+id/tempText" />
+            app:layout_constraintEnd_toStartOf="@+id/saltProgressBar"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/clarityText"
             style="@style/mainBox"
-            android:layout_width="150dp"
+            android:layout_width="@dimen/box_width"
             android:layout_height="wrap_content"
             android:text="@string/clarity_text"
             app:layout_constraintBaseline_toBaselineOf="@+id/clarityNum"
-            app:layout_constraintStart_toStartOf="@+id/saltText" />
-
-        <TextView
-            android:id="@+id/phNum"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:text="@{@string/level_format(homeViewModel.pH)}"
-            app:layout_constraintBottom_toTopOf="@+id/tempNum"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/phText"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/tempNum"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:text="@{@string/level_format(homeViewModel.temp)}"
-            app:layout_constraintBottom_toTopOf="@+id/saltNum"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/tempText"
-            app:layout_constraintTop_toBottomOf="@+id/phNum" />
-
-        <TextView
-            android:id="@+id/saltNum"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:text="@{@string/level_format(homeViewModel.salt)}"
-            app:layout_constraintBottom_toTopOf="@+id/clarityNum"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/saltText"
-            app:layout_constraintTop_toBottomOf="@+id/tempNum" />
-
-        <TextView
-            android:id="@+id/clarityNum"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:text="@{@string/level_format(homeViewModel.clarity)}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/clarityText"
-            app:layout_constraintTop_toBottomOf="@+id/saltNum" />
+            app:layout_constraintEnd_toStartOf="@+id/clarityProgressBar"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/tankName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginEnd="52dp"
             android:text="FishTankName"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="#060C35"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/phNum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{@string/pH_format(homeViewModel.pH)}"
+            style="@style/progressText"
+            app:layout_constraintBottom_toBottomOf="@+id/phProgressBar"
+            app:layout_constraintEnd_toEndOf="@+id/phProgressBar"
+            app:layout_constraintStart_toStartOf="@+id/phProgressBar"
+            app:layout_constraintTop_toTopOf="@+id/phProgressBar"
+            tools:text="60%" />
+
+        <TextView
+            android:id="@+id/tempNum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{@string/temp_format(homeViewModel.temp)}"
+            style="@style/progressText"
+            app:layout_constraintBottom_toBottomOf="@+id/tempProgressBar"
+            app:layout_constraintEnd_toEndOf="@+id/tempProgressBar"
+            app:layout_constraintStart_toStartOf="@+id/tempProgressBar"
+            app:layout_constraintTop_toTopOf="@+id/tempProgressBar"
+            tools:text="60" />
+
+        <TextView
+            android:id="@+id/clarityNum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{@string/clarity_format(homeViewModel.clarity)}"
+            style="@style/progressText"
+            app:layout_constraintBottom_toBottomOf="@+id/clarityProgressBar"
+            app:layout_constraintEnd_toEndOf="@+id/clarityProgressBar"
+            app:layout_constraintStart_toStartOf="@+id/clarityProgressBar"
+            app:layout_constraintTop_toTopOf="@+id/clarityProgressBar"
+            tools:text="60" />
+
+        <TextView
+            android:id="@+id/saltNum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{@string/salt_format(homeViewModel.salt)}"
+            style="@style/progressText"
+            app:layout_constraintBottom_toBottomOf="@+id/saltProgressBar"
+            app:layout_constraintEnd_toEndOf="@+id/saltProgressBar"
+            app:layout_constraintStart_toStartOf="@+id/saltProgressBar"
+            app:layout_constraintTop_toTopOf="@+id/saltProgressBar"
+            tools:text="60" />
+
+
+        <TextView
+            android:id="@+id/phText"
+            style="@style/mainBox"
+            android:layout_width="@dimen/box_width"
+            android:layout_height="wrap_content"
+            android:cursorVisible="false"
+            android:text="@string/ph_level_text"
+            app:layout_constraintBaseline_toBaselineOf="@+id/phNum"
+            app:layout_constraintEnd_toStartOf="@+id/phProgressBar"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ProgressBar
+            android:id="@+id/phProgressBar"
+            style="@style/progressCircles"
+            android:layout_width="@dimen/progress_bar_width"
+            android:layout_height="@dimen/progress_bar_height"
+            android:layout_marginEnd="32dp"
+            android:max="140"
+            app:layout_constraintBottom_toTopOf="@+id/tempProgressBar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tankName"
+            tools:progress="40" />
+
+        <ProgressBar
+            android:id="@+id/tempProgressBar"
+            style="@style/progressCircles"
+            android:layout_width="@dimen/progress_bar_width"
+            android:layout_height="@dimen/progress_bar_height"
+            android:layout_marginEnd="32dp"
+            app:layout_constraintBottom_toTopOf="@+id/saltProgressBar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/phProgressBar"
+            tools:progress="60" />
+
+        <ProgressBar
+            android:id="@+id/saltProgressBar"
+            style="@style/progressCircles"
+            android:layout_width="@dimen/progress_bar_width"
+            android:layout_height="@dimen/progress_bar_height"
+            android:layout_marginEnd="32dp"
+            app:layout_constraintBottom_toTopOf="@+id/clarityProgressBar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tempProgressBar"
+            tools:progress="80" />
+
+        <ProgressBar
+            android:id="@+id/clarityProgressBar"
+            style="@style/progressCircles"
+            android:layout_width="@dimen/progress_bar_width"
+            android:layout_height="@dimen/progress_bar_height"
+            android:layout_marginEnd="32dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/saltProgressBar"
+            tools:progress="10" />
+
+        <EditText
+            android:id="@+id/testingPH"
+            style="@style/mainBox"
+            android:layout_width="108dp"
+            android:layout_height="39dp"
+            android:layout_marginStart="4dp"
+            android:ems="10"
+            android:hint="Enter pH"
+            android:inputType="number|numberDecimal"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <Button
+            android:id="@+id/buttonTest"
+            style="@style/mainButton"
+            android:layout_width="54dp"
+            android:layout_height="36dp"
+            android:text="Button"
+            app:layout_constraintEnd_toStartOf="@+id/tankName"
+            app:layout_constraintHorizontal_bias="0.516"
+            app:layout_constraintStart_toEndOf="@+id/testingPH"
+            app:layout_constraintTop_toTopOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

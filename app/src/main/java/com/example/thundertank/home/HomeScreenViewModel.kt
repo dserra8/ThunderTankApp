@@ -1,31 +1,43 @@
 package com.example.thundertank.home
 
 
+import android.content.Context
 import android.graphics.Color
 import android.text.Editable
+import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.thundertank.network.PostResponse
+import com.example.thundertank.network.StringTanksProperties
 import com.example.thundertank.network.TanksProperties
 import com.example.thundertank.repository.Repository
+import kotlinx.coroutines.*
 
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
 import retrofit2.Response
 import kotlin.math.floor
 
 class HomeScreenViewModel(private val repository: Repository): ViewModel() {
-    private val _response2 = MutableLiveData<Response<TanksProperties>>()
-    val response2: LiveData<Response<TanksProperties>>
-        get() = _response2
+    private val _postResponse = MutableLiveData<PostResponse>()
+    val postResponse: LiveData<PostResponse>
+        get() = _postResponse
 
     // The internal MutableLiveData String that stores the status of the most recent request
-    private val _response = MutableLiveData<Response<TanksProperties>>()
-    val response: LiveData<Response<TanksProperties>>
-        get() = _response
+    private val _getResponse = MutableLiveData<StringTanksProperties>()
+    val getResponse: LiveData<StringTanksProperties>
+        get() = _getResponse
+
+    //Ranges for the different values
+    private val _tempRange = MutableLiveData<List<Float>>()
+    val tempRange: LiveData<List<Float>>
+        get() = _tempRange
+
+    //Ranges for the different values
+    private val _clarityRange = MutableLiveData<List<Float>>()
+    val clarityRange: LiveData<List<Float>>
+        get() = _clarityRange
 
     //Ranges for the different values
     private val _phRange = MutableLiveData<List<Float>>()
@@ -47,30 +59,42 @@ class HomeScreenViewModel(private val repository: Repository): ViewModel() {
     val clarity: LiveData<Float>
         get() = _clarity
 
-    //LiveData for temperature
-    private val _salt = MutableLiveData<Float>()
-    val salt: LiveData<Float>
-        get() = _salt
+
+    private lateinit var repeatCall: Job
+    private var viewModelJob = Job()
+    private val coroutineScope= CoroutineScope(viewModelJob + Dispatchers.Main)
+
 
     init {
 
-        _pH.value = 0.0f
-        _temp.value = 0.0f
-        _clarity.value = 0.0f
-        _salt.value = 0.0f
+        Log.i("model", "ViewModel Created")
+//        _pH.value = 10.0f
+//        _temp.value = 80.0f
+//        _clarity.value = 0.4f
+//        _salt.value = 1.4f
         _phRange.value = listOf(9.5f,10.5f)
-        getTanksProperties()
+        _tempRange.value = listOf(70f,80f)
+        _clarityRange.value = listOf(.5f,5f)
     }
 
-    private fun getTanksProperties() {
-        viewModelScope.launch {
-            _response.value = repository.getProperties()
+    private fun startReceivingJob(timeInterval: Long): Job{
+        return CoroutineScope(Dispatchers.Default).launch {
+            while (isActive) {
+                // add your task here
+                getTanksProperties()
+                delay(timeInterval)
+            }
         }
     }
-    fun pushPost(post: TanksProperties){
-        viewModelScope.launch {
-            val response2 = repository.pushPost(post)
-            _response2.value = response2
+    private fun getTanksProperties() {
+        coroutineScope.launch {
+            var getPropertiesDeferred = repository.getPropertiesAsync()
+            try {
+                var result = getPropertiesDeferred.await()
+                _getResponse.value = result
+            } catch (e: Exception) {
+               // _response.value = "Failure: ${e.message}"
+            }
         }
     }
 
@@ -79,8 +103,8 @@ class HomeScreenViewModel(private val repository: Repository): ViewModel() {
         if (padding != 0.toFloat()) {
             return when(current){
                 in start+padding..end-padding -> Color.GREEN
-                in start..start+padding -> Color.rgb(255,69,0)
-                in end-padding..end -> Color.rgb(255,69,0)
+                in start..start+padding -> Color.YELLOW
+                in end-padding..end -> Color.YELLOW
                 else -> Color.RED
             }
         }
@@ -94,17 +118,22 @@ class HomeScreenViewModel(private val repository: Repository): ViewModel() {
         _pH.value = newNum.toString().toFloat()
     }
 
-    fun updateProperties(pH: Double, temp: Double, salt:Double, clarity: Double){
+    fun updateProperties(pH: String, temp: String, clarity: String){
         _pH.value = pH.toFloat()
         _temp.value = temp.toFloat()
-        _salt.value = salt.toFloat()
         _clarity.value = clarity.toFloat()
 
     }
 
+    fun restoreValues(ph: Float?,temp: Float?,clarity: Float?){
+        _pH.value = ph
+        _temp.value = temp
+        _clarity.value = clarity
+      //  repeatCall = startReceivingJob(10000)
+    }
     override fun onCleared() {
+       // repeatCall.cancel()
+        Log.i("model", "ViewModel Destroyed")
         super.onCleared()
     }
-
-
 }

@@ -1,17 +1,19 @@
 package com.example.thundertank.repository
 
-import com.example.thundertank.network.RetrofitInstance
-import com.example.thundertank.network.TanksProperties
-import retrofit2.Response
+import com.example.thundertank.network.*
+import kotlinx.coroutines.Deferred
 
 class Repository {
 
-    suspend fun getProperties(): Response<TanksProperties>{
-        return RetrofitInstance.api.getProperties()
+    fun getPropertiesAsync(): Deferred<StringTanksProperties>{
+        return RetrofitInstance.api.getPropertiesAsync()
     }
 
-    suspend fun pushPost(post: TanksProperties): Response<TanksProperties>{
-        return RetrofitInstance.api.pushPost(post)
+    fun getRangesAsync(): Deferred<StringTanksRanges>{
+        return RetrofitInstance.api.getRangesAsync()
+    }
+    fun pushRangesAsync(post: TanksRanges): Deferred<PostResponse>{
+        return RetrofitInstance.api.pushRangesAsync(post)
     }
 
 }

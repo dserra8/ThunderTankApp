@@ -8,12 +8,12 @@
         <item name="android:textSize">@dimen/box_text_size</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@android:color/white</item>
+        <item name="android:fontFamily">@font/candal</item>
 
     </style>
 
     <style name="progressCircles">
         <item name="android:indeterminateOnly">false</item>
-        <item name="android:progressDrawable">@drawable/circle</item>
     </style>
 
     <style name="mainButton" parent="Widget.AppCompat.Button.Colored">
@@ -22,6 +22,7 @@
         <item name="android:textSize">@dimen/box_text_size</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@android:color/white</item>
+        <item name="android:fontFamily">@font/candal</item>
     </style>
 
     <style name="progressText">
@@ -29,7 +30,33 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textAlignment">center</item>
+        <item name="android:fontFamily">@font/candal</item>
     </style>
 
+    <style name="configurationText">
+        <item name="android:textSize">@dimen/configuration_text_size</item>
+        <item name="android:fontFamily">@font/candal</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@android:color/white</item>
+
+    </style>
+
+    <style name="configurationNumbers">
+        <item name="android:textSize">@dimen/configuration_number_size</item>
+        <item name="android:fontFamily">@font/candal</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@android:color/white</item>
+
+    </style>
+
+    <style name="fishButton" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:background">@drawable/rounded_rectangle</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textSize">@dimen/box_text_size</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:layout_marginTop">@dimen/space_between_buttons</item>
+        <item name="android:fontFamily">@font/candal</item>
+    </style>
 
 </resources>

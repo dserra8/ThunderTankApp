@@ -6,5 +6,8 @@
     <dimen name="corners">5dp</dimen>
     <dimen name="progress_bar_width">110dp</dimen>
     <dimen name="progress_bar_height">110dp</dimen>
+    <dimen name="space_between_buttons">20dp</dimen>
+    <dimen name="configuration_text_size">24sp</dimen>
+    <dimen name="configuration_number_size">16sp</dimen>
 
 </resources>

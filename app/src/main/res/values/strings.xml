@@ -9,16 +9,17 @@
 
     <string name="hello_first_fragment">Hello first fragment</string>
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+
     <string name="ph_level_text">PH Level</string>
     <string name="temperature_text">Temperature</string>
-    <string name="salinity_text">Salinity</string>
     <string name="clarity_text">Clarity</string>
+
     <string name="pH_format">%.1f pH</string>
     <string name="temp_format">%.1f \u2109</string>
-    <string name="clarity_format">%.1f mg/L</string>
-    <string name="salt_format">%.1f pH</string>
+    <string name="clarity_format">%.1f NTU</string>
+
     <string name="welcome_text">Welcome</string>
-    <string name="ChooseFish">Choose the fish you own from our list!</string>
+    <string name="ChooseFish">Choose a fish!</string>
     <string name="ChooseFishManually">Or manually setup your fish!</string>
     <string name="BettaPresetText">Betta Fish</string>
     <string name="GoldFishPresetText">Gold Fish</string>
@@ -27,6 +28,16 @@
     <string name="MolliesPresetText">Mollies</string>
     <string name="NeonTetraPresetText">Neon Treta</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="manual_setup_button_text">Manual Setup</string>
+    <string name="how_many_fishes_text">How many of these fishes?</string>
+    <string name="confirm_text">Confirm</string>
+    <string name="configurations_text">Configurations</string>
+    <string name="enter_amount_text">Enter Amount</string>
+
+    <string name="pH_ranges_format">%.1f - %.1f pH</string>
+    <string name="temp_ranges_format">%.1f - %.1f \u2109</string>
+    <string name="clarity_ranges_format">%.1f - %.1f NTU</string>
+
 
 
 </resources>

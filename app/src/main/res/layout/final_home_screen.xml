@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".setup.FinalHomeScreen">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.example.thundertank.setup.SharedSetupViewModel" />
+    </data>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/main_background_color">
+
+        <ImageView
+            android:id="@+id/tempImage"
+            android:layout_width="109dp"
+            android:layout_height="102dp"
+            android:layout_weight="1"
+            android:src="@drawable/ic_temp_icon"
+            app:layout_constraintBottom_toTopOf="@+id/ph_configuration_text"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintStart_toStartOf="@+id/fish_amount_text"
+            app:layout_constraintTop_toBottomOf="@+id/fish_amount_text" />
+
+        <TextView
+            android:id="@+id/tempConfiguration"
+            style="@style/configurationNumbers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{@string/temp_ranges_format(viewModel.tempRange[0], viewModel.tempRange[1])}"
+            app:layout_constraintBottom_toBottomOf="@+id/tempImage"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/tempImage"
+            app:layout_constraintTop_toTopOf="@+id/tempImage" />
+
+        <TextView
+            android:id="@+id/configuration_text"
+            style="@style/configurationText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/configurations_text"
+            android:textAllCaps="true"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/ph_configuration_text"
+            style="@style/configurationText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/ph_level_text"
+            android:textColor="#FFFFFF"
+            app:layout_constraintBottom_toTopOf="@+id/clarity_configuration_text"
+            app:layout_constraintStart_toStartOf="@+id/tempImage"
+            app:layout_constraintTop_toBottomOf="@+id/tempImage" />
+
+        <TextView
+            android:id="@+id/phConfiguration"
+            style="@style/configurationNumbers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{@string/pH_ranges_format(viewModel.phRange[0], viewModel.phRange[1])}"
+            android:textAlignment="textStart"
+            app:layout_constraintBottom_toBottomOf="@+id/ph_configuration_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/ph_configuration_text"
+            app:layout_constraintTop_toTopOf="@+id/ph_configuration_text" />
+
+        <TextView
+            android:id="@+id/clarity_configuration_text"
+            style="@style/configurationText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/clarity_text"
+            app:layout_constraintBottom_toTopOf="@+id/confirmButton"
+            app:layout_constraintStart_toStartOf="@+id/ph_configuration_text"
+            app:layout_constraintTop_toBottomOf="@+id/ph_configuration_text" />
+
+        <TextView
+            android:id="@+id/clarityConfiguration"
+            style="@style/configurationNumbers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{@string/clarity_ranges_format(viewModel.clarityRange[0], viewModel.clarityRange[1])}"
+            app:layout_constraintBottom_toBottomOf="@+id/clarity_configuration_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/clarity_configuration_text"
+            app:layout_constraintTop_toTopOf="@+id/clarity_configuration_text" />
+
+        <EditText
+            android:id="@+id/edit_fish_amount"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="24dp"
+            android:autofillHints=""
+            android:ems="3"
+            android:hint="@string/enter_amount_text"
+            android:inputType="number"
+            app:layout_constraintBottom_toBottomOf="@+id/fish_amount_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/fish_amount_text"
+            app:layout_constraintTop_toTopOf="@+id/fish_amount_text"
+            app:layout_constraintVertical_bias="0.461" />
+
+        <TextView
+            android:id="@+id/fish_amount_text"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:fontFamily="@font/candal"
+            android:text="@string/how_many_fishes_text"
+            android:textColor="#FFFFFF"
+            app:layout_constraintBottom_toTopOf="@+id/tempImage"
+            app:layout_constraintEnd_toStartOf="@+id/edit_fish_amount"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/configuration_text" />
+
+        <Button
+            android:id="@+id/confirmButton"
+            style="@style/fishButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="80dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="80dp"
+            android:text="@string/confirm_text"
+            android:onClick="@{() -> viewModel.onConfirm()}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/clarity_configuration_text" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>
+
+

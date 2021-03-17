@@ -1,23 +1,25 @@
 package com.example.thundertank.home
 
-import android.animation.ObjectAnimator
+import android.R.attr.data
+import android.content.Context
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.navArgs
 import com.example.thundertank.R
 import com.example.thundertank.databinding.HomeScreenBinding
-import com.example.thundertank.network.TanksProperties
 import com.example.thundertank.repository.Repository
+
 
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
@@ -34,6 +36,7 @@ class HomeScreenFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
 
         // Inflate view and obtain an instance of the binding class
+        Log.i("fragment", "created")
          binding = DataBindingUtil.inflate(
                 inflater,
                 R.layout.home_screen,
@@ -41,59 +44,93 @@ class HomeScreenFragment : Fragment() {
                 false)
 
         val repository = Repository()
+        val homeFragmentArgs by navArgs<HomeScreenFragmentArgs>()
         viewModelFactory = HomeScreenViewModelFactory(repository)
-
 
         binding.homeViewModel = viewModel
         binding.lifecycleOwner = this
 
-        val drawable: LayerDrawable = binding.phProgressBar.progressDrawable as LayerDrawable
-        val shape: Drawable = drawable.findDrawableByLayerId(R.id.shape)
 
-        val myPost = TanksProperties(20.0,5.1,9.9,1.5)
-        viewModel.pushPost(myPost)
+        loadData()
+        val phDrawable: LayerDrawable = binding.phProgressBar.progressDrawable as LayerDrawable
+        val phShape: Drawable = phDrawable.findDrawableByLayerId(R.id.phShape)
 
-        viewModel.response2.observe(viewLifecycleOwner, Observer { response ->
-            if(response.isSuccessful){
-                Log.d("main", response.body().toString())
-                Log.d("main", response.code().toString())
-                Log.d("main", response.message())
-                Toast.makeText(context,"Success", Toast.LENGTH_SHORT).show()
-            }
-            else
-            {
-                Log.d("main", response.errorBody().toString())
-                Toast.makeText(context,"${response.errorBody().toString()}", Toast.LENGTH_SHORT).show()
+        val tempDrawable: LayerDrawable = binding.tempProgressBar.progressDrawable as LayerDrawable
+        val tempShape: Drawable = tempDrawable.findDrawableByLayerId(R.id.tempShape)
 
-            }
-        })
-        viewModel.response.observe(viewLifecycleOwner, Observer { response ->
-            if(response.isSuccessful){
-                viewModel.updateProperties(response.body()?.pH!!, response.body()?.temp!!,
-                    response.body()?.salt!!, response.body()?.clear!!)
-            }
-            else
-            {
-                Log.d("Response", response.errorBody().toString())
-            }
-        })
-        viewModel.pH.observe(viewLifecycleOwner, Observer {newPH ->
-            ObjectAnimator.ofInt(binding.phProgressBar,"progress",(newPH*10).toInt())
-                    .setDuration(50)
-                    .start()
-            shape.setTint(viewModel.changeProgressColor(viewModel.phRange.value?.get(0)!! ,viewModel.phRange.value?.get(1)!!, newPH))
-        })
+        val clarityDrawable: LayerDrawable = binding.clarityProgressBar.progressDrawable as LayerDrawable
+        val clarityShape: Drawable = clarityDrawable.findDrawableByLayerId(R.id.clarityShape)
 
-        viewModel.phRange.observe(viewLifecycleOwner, Observer { newRange ->
-           shape.setTint(viewModel.changeProgressColor(newRange[0],newRange[1], viewModel.pH.value!!))
-        })
-
-        binding.buttonTest.setOnClickListener {viewModel.onClickTest(binding.testingPH.text)
+        if (homeFragmentArgs.configurationChange)
+        {
+            Toast.makeText(
+                context, "Changes Applied",
+                Toast.LENGTH_SHORT
+            ).show()
         }
+        else {
+            Toast.makeText(
+                context, "Changes DID NOT APPLY",
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+
+
+        viewModel.postResponse.observe(viewLifecycleOwner, Observer { response ->
+
+            Toast.makeText(context,"Success: ${response.success} Message: ${response.message}", Toast.LENGTH_SHORT).show()
+
+        })
+        viewModel.getResponse.observe(viewLifecycleOwner, Observer { response ->
+                viewModel.updateProperties(response.pH, response.temp,
+                     response.clear)
+
+        })
+
+        //observe methods for changing progress bar colors
+        viewModel.pH.observe(viewLifecycleOwner, Observer {newPH ->
+            changeProgress((newPH*10).toInt(), binding.phProgressBar)
+            phShape.setTint(viewModel.changeProgressColor(viewModel.phRange.value?.get(0)!! ,viewModel.phRange.value?.get(1)!!, newPH))
+        })
+
+        viewModel.temp.observe(viewLifecycleOwner, Observer {newTemp ->
+            changeProgress((newTemp*10).toInt(), binding.tempProgressBar)
+            tempShape.setTint(viewModel.changeProgressColor(viewModel.tempRange.value?.get(0)!! ,viewModel.tempRange.value?.get(1)!!, newTemp))
+        })
+        viewModel.clarity.observe(viewLifecycleOwner, Observer {newClarity ->
+            changeProgress((newClarity*10).toInt(), binding.clarityProgressBar)
+            clarityShape.setTint(viewModel.changeProgressColor(viewModel.clarityRange.value?.get(0)!! ,viewModel.clarityRange.value?.get(1)!!, newClarity))
+        })
 
         // Inflate the layout for this fragment
         return binding.root
     }
 
+    private fun changeProgress(progress: Int, view: ProgressBar){
+        view.progress = progress;
+    }
 
+    private fun saveData() {
+        val sharedPreferences =
+            this.activity?.getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE)
+        val editor = sharedPreferences?.edit()
+        editor?.putFloat("ph", viewModel.pH.value!!)
+        editor?.putFloat("temp", viewModel.temp.value!!)
+        editor?.putFloat("clarity", viewModel.clarity.value!!)
+        editor?.apply()
+    }
+
+    private fun loadData(){
+        val sp =
+            this.activity?.getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE)
+        val ph = sp?.getFloat("ph", 0F)
+        val temp = sp?.getFloat("temp", 0F)
+        val clarity = sp?.getFloat("clarity", 0F)
+        viewModel.restoreValues(ph,temp,clarity)
+    }
+
+    override fun onDestroy() {
+        saveData()
+        super.onDestroy()
+    }
 }

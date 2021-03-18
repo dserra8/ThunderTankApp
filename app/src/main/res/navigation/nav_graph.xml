@@ -8,17 +8,21 @@
         android:id="@+id/homeScreenFragment"
         android:name="com.example.thundertank.home.HomeScreenFragment"
         android:label="Home"
-        tools:layout="@layout/home_screen" >
+        tools:layout="@layout/home_screen">
         <argument
             android:name="configurationChange"
-            app:argType="boolean"
-            android:defaultValue="false" />
+            android:defaultValue="false"
+            app:argType="boolean" />
+        <argument
+            android:name="fromConfirm"
+            android:defaultValue="false"
+            app:argType="boolean" />
     </fragment>
     <fragment
         android:id="@+id/setupScreen1Fragment"
         android:name="com.example.thundertank.setup.SetupScreen1Fragment"
         android:label="Add New Fish"
-        tools:layout="@layout/fragment_setup_screen1" >
+        tools:layout="@layout/fragment_setup_screen1">
         <action
             android:id="@+id/action_setupScreen1Fragment_to_finalHomeScreen"
             app:destination="@id/finalHomeScreen" />
@@ -30,21 +34,25 @@
         android:id="@+id/finalHomeScreen"
         android:name="com.example.thundertank.setup.FinalHomeScreen"
         android:label="final_home_screen"
-        tools:layout="@layout/final_home_screen" >
+        tools:layout="@layout/final_home_screen">
         <action
             android:id="@+id/action_finalHomeScreen_to_homeScreenFragment"
-            app:destination="@id/homeScreenFragment" >
-        <argument
-            android:name="configurationChange"
-            app:argType="boolean"
-            android:defaultValue="false" />
+            app:destination="@id/homeScreenFragment">
+            <argument
+                android:name="configurationChange"
+                android:defaultValue="false"
+                app:argType="boolean" />
+            <argument
+                android:name="fromConfirm"
+                android:defaultValue="false"
+                app:argType="boolean" />
         </action>
     </fragment>
     <fragment
         android:id="@+id/setupRanges"
         android:name="com.example.thundertank.setup.SetupRanges"
         android:label="setup_ranges"
-        tools:layout="@layout/setup_ranges" >
+        tools:layout="@layout/setup_ranges">
         <action
             android:id="@+id/action_setupRanges_to_setupOther"
             app:destination="@id/setupOther" />
@@ -53,7 +61,7 @@
         android:id="@+id/setupOther"
         android:name="com.example.thundertank.setup.SetupOther"
         android:label="setup_other"
-        tools:layout="@layout/setup_other" >
+        tools:layout="@layout/setup_other">
         <action
             android:id="@+id/action_setupOther_to_finalHomeScreen"
             app:destination="@id/finalHomeScreen" />

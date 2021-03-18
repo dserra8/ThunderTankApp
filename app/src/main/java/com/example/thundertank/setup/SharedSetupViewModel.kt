@@ -4,6 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.thundertank.network.PostResponse
+import com.example.thundertank.network.StringTanksProperties
+import com.example.thundertank.network.StringTanksRanges
 import com.example.thundertank.network.TanksRanges
 import com.example.thundertank.repository.Repository
 import kotlinx.coroutines.CoroutineScope
@@ -18,6 +20,9 @@ class SharedSetupViewModel(private val repository: Repository): ViewModel() {
     val postResponse: LiveData<PostResponse>
         get() = _postResponse
 
+    private val _getResponse = MutableLiveData<StringTanksRanges>()
+    val getResponse: LiveData<StringTanksRanges>
+        get() = _getResponse
 
     private val _fishNum = MutableLiveData<Int>()
     val fishNum: LiveData<Int>
@@ -76,6 +81,39 @@ class SharedSetupViewModel(private val repository: Repository): ViewModel() {
             }
         }
     }
+    fun getRecentRanges() {
+        coroutineScope.launch {
+            var getRangesDeferred = repository.getRangesAsync()
+            try {
+                var result = getRangesDeferred.await()
+                _getResponse.value = result
+            } catch (e: Exception) {
+                // _response.value = "Failure: ${e.message}"
+            }
+        }
+    }
+
+//    fun mergeRanges(): Boolean{
+//
+//        val compatible = checkRanges()
+//
+//    }
+//
+//    private fun checkRanges(oldLow: Float, oldHigh: Float, newLow: Float, newHigh: Float ): List<Float> {
+//        val newRange = mutableListOf<Float>(-1F, -1F)
+//        when{
+//            (newLow >= oldLow) && (newLow < oldHigh) ->  newRange[0] = newLow
+//            (newLow < oldLow) -> newRange[0] = oldLow
+//            else -> newRange[0] = -1F
+//        }
+//        when{
+//            (newHigh <= oldHigh) && (newHigh > oldLow) ->  newRange[1] = newHigh
+//            (newHigh > oldHigh) && (-> newRange[0] = oldLow
+//            else -> newRange[0] = -1F
+//        }
+//
+//        return newRange
+//    }
 
     fun eventFishAngel(){
         onPreset()

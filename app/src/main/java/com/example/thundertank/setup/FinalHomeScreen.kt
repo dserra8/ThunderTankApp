@@ -44,13 +44,16 @@ class FinalHomeScreen : Fragment() {
         viewModel.eventConfirm.observe(viewLifecycleOwner, Observer { confirm ->
             if(confirm == true) {
                 var configurationChange = false
+                var fromConfirm = true
+                viewModel.getRecentRanges()
+               // viewModel.mergeRanges()
                 viewModel.eventConfirmComplete()
                // viewModel.postRanges()
                 if(viewModel.postResponse.value?.success == "1") {
                     configurationChange = true
                     saveData()
                 }
-                findNavController().navigate(FinalHomeScreenDirections.actionFinalHomeScreenToHomeScreenFragment(configurationChange))
+                findNavController().navigate(FinalHomeScreenDirections.actionFinalHomeScreenToHomeScreenFragment(configurationChange,fromConfirm ))
             }
         })
         // Inflate the layout for this fragment

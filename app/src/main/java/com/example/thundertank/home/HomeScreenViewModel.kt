@@ -60,7 +60,7 @@ class HomeScreenViewModel(private val repository: Repository): ViewModel() {
         get() = _clarity
 
 
-    private lateinit var repeatCall: Job
+   // private var repeatCall: Job
     private var viewModelJob = Job()
     private val coroutineScope= CoroutineScope(viewModelJob + Dispatchers.Main)
 
@@ -71,10 +71,12 @@ class HomeScreenViewModel(private val repository: Repository): ViewModel() {
 //        _pH.value = 10.0f
 //        _temp.value = 80.0f
 //        _clarity.value = 0.4f
-//        _salt.value = 1.4f
+
         _phRange.value = listOf(9.5f,10.5f)
         _tempRange.value = listOf(70f,80f)
         _clarityRange.value = listOf(.5f,5f)
+      //  repeatCall = startReceivingJob(3000)
+        getTanksProperties()
     }
 
     private fun startReceivingJob(timeInterval: Long): Job{
@@ -94,6 +96,8 @@ class HomeScreenViewModel(private val repository: Repository): ViewModel() {
                 _getResponse.value = result
             } catch (e: Exception) {
                // _response.value = "Failure: ${e.message}"
+                _getResponse.value = StringTanksProperties("1","1","1")
+
             }
         }
     }
@@ -129,10 +133,10 @@ class HomeScreenViewModel(private val repository: Repository): ViewModel() {
         _pH.value = ph
         _temp.value = temp
         _clarity.value = clarity
-      //  repeatCall = startReceivingJob(10000)
+        //repeatCall = startReceivingJob(3000)
     }
     override fun onCleared() {
-       // repeatCall.cancel()
+      //  repeatCall.cancel()
         Log.i("model", "ViewModel Destroyed")
         super.onCleared()
     }

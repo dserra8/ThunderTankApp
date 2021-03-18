@@ -51,7 +51,7 @@ class HomeScreenFragment : Fragment() {
         binding.lifecycleOwner = this
 
 
-        loadData()
+       // loadData()
         val phDrawable: LayerDrawable = binding.phProgressBar.progressDrawable as LayerDrawable
         val phShape: Drawable = phDrawable.findDrawableByLayerId(R.id.phShape)
 
@@ -61,29 +61,36 @@ class HomeScreenFragment : Fragment() {
         val clarityDrawable: LayerDrawable = binding.clarityProgressBar.progressDrawable as LayerDrawable
         val clarityShape: Drawable = clarityDrawable.findDrawableByLayerId(R.id.clarityShape)
 
-        if (homeFragmentArgs.configurationChange)
-        {
-            Toast.makeText(
-                context, "Changes Applied",
-                Toast.LENGTH_SHORT
-            ).show()
+        if(homeFragmentArgs.fromConfirm) {
+            if (homeFragmentArgs.configurationChange) {
+                Toast.makeText(
+                    context, "Changes Applied",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                Toast.makeText(
+                    context, "Changes DID NOT APPLY",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
-        else {
-            Toast.makeText(
-                context, "Changes DID NOT APPLY",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
 
 
-        viewModel.postResponse.observe(viewLifecycleOwner, Observer { response ->
-
-            Toast.makeText(context,"Success: ${response.success} Message: ${response.message}", Toast.LENGTH_SHORT).show()
-
-        })
+//        viewModel.postResponse.observe(viewLifecycleOwner, Observer { response ->
+//
+//            Toast.makeText(context,"Success: ${response.success} Message: ${response.message}", Toast.LENGTH_SHORT).show()
+//
+//        })
         viewModel.getResponse.observe(viewLifecycleOwner, Observer { response ->
-                viewModel.updateProperties(response.pH, response.temp,
+
+            Toast.makeText(
+                context, response.temp,
+                Toast.LENGTH_SHORT
+            ).show()
+
+            viewModel.updateProperties(response.pH, response.temp,
                      response.clear)
+
 
         })
 
@@ -130,7 +137,7 @@ class HomeScreenFragment : Fragment() {
     }
 
     override fun onDestroy() {
-        saveData()
+       // saveData()
         super.onDestroy()
     }
 }

@@ -24,23 +24,28 @@ class SharedSetupViewModel(private val repository: Repository): ViewModel() {
     val getResponse: LiveData<StringTanksRanges>
         get() = _getResponse
 
+    private val _getResponseNum = MutableLiveData<TanksRanges>()
+    val getResponseNum: LiveData<TanksRanges>
+        get() = _getResponseNum
+
+
     private val _fishNum = MutableLiveData<Int>()
     val fishNum: LiveData<Int>
         get() = _fishNum
 
     //Ranges for the different values
-    private val _tempRange = MutableLiveData<List<Float>>()
-    val tempRange: LiveData<List<Float>>
+    private val _tempRange = MutableLiveData<List<Double>>()
+    val tempRange: LiveData<List<Double>>
         get() = _tempRange
 
     //Ranges for the different values
-    private val _clarityRange = MutableLiveData<List<Float>>()
-    val clarityRange: LiveData<List<Float>>
+    private val _clarityRange = MutableLiveData<List<Double>>()
+    val clarityRange: LiveData<List<Double>>
         get() = _clarityRange
 
     //Ranges for the different values
-    private val _phRange = MutableLiveData<List<Float>>()
-    val phRange: LiveData<List<Float>>
+    private val _phRange = MutableLiveData<List<Double>>()
+    val phRange: LiveData<List<Double>>
         get() = _phRange
 
     private val _feedingRate = MutableLiveData<Int>()
@@ -59,6 +64,9 @@ class SharedSetupViewModel(private val repository: Repository): ViewModel() {
     val whichFish: LiveData<Int>
         get() = _whichFish
 
+
+    var id: Int = 1
+    var error: String = ""
     private var viewModelJob = Job()
     private val coroutineScope= CoroutineScope(viewModelJob + Dispatchers.Main)
 
@@ -68,7 +76,7 @@ class SharedSetupViewModel(private val repository: Repository): ViewModel() {
 
     fun postRanges() {
         coroutineScope.launch {
-            val obj = TanksRanges(1, fishNum.value!!, 3.0f, tempRange.value?.get(0)!!, tempRange.value?.get(1)!!,
+            val obj = TanksRanges(id, fishNum.value!!, 3.0, tempRange.value?.get(0)!!, tempRange.value?.get(1)!!,
                 phRange.value?.get(0)!!, phRange.value?.get(1)!!, clarityRange.value?.get(0)!!, clarityRange.value?.get(0)!!)
             var postRangesDeferred = repository.pushRangesAsync(obj)
             try {
@@ -87,75 +95,93 @@ class SharedSetupViewModel(private val repository: Repository): ViewModel() {
             try {
                 var result = getRangesDeferred.await()
                 _getResponse.value = result
+
             } catch (e: Exception) {
-                // _response.value = "Failure: ${e.message}"
+                error = e.toString()
             }
         }
     }
 
-//    fun mergeRanges(): Boolean{
-//
-//        val compatible = checkRanges()
-//
-//    }
-//
-//    private fun checkRanges(oldLow: Float, oldHigh: Float, newLow: Float, newHigh: Float ): List<Float> {
-//        val newRange = mutableListOf<Float>(-1F, -1F)
-//        when{
-//            (newLow >= oldLow) && (newLow < oldHigh) ->  newRange[0] = newLow
-//            (newLow < oldLow) -> newRange[0] = oldLow
-//            else -> newRange[0] = -1F
-//        }
-//        when{
-//            (newHigh <= oldHigh) && (newHigh > oldLow) ->  newRange[1] = newHigh
-//            (newHigh > oldHigh) && (-> newRange[0] = oldLow
-//            else -> newRange[0] = -1F
-//        }
-//
-//        return newRange
-//    }
+    fun mergeRanges(): Boolean{
+
+        val newTempRange = checkRanges(
+            getResponse.value?.tempLow?.toDouble()!!, getResponse.value?.tempHigh?.toDouble()!!,
+            tempRange.value?.get(0)!!, tempRange.value?.get(1)!!)
+        val newPhRange = checkRanges(
+            getResponse.value?.phLow?.toDouble()!!, getResponse.value?.phHigh?.toDouble()!!,
+            phRange.value?.get(0)!!, phRange.value?.get(1)!!)
+        val newClarityRange = checkRanges(
+            getResponse.value?.clarityLow?.toDouble()!!, getResponse.value?.clarityHigh?.toDouble()!!,
+            clarityRange.value?.get(0)!!, clarityRange.value?.get(1)!!)
+
+        if (newTempRange[0] != -1.0 && newTempRange[1] != -1.0 && newPhRange[0] != -1.0 && newPhRange[1] != -1.0 && newClarityRange[0] != -1.0 && newClarityRange[1] != -1.0)
+        {
+            _fishNum.value = _getResponseNum.value?.fishNum?.let { _fishNum.value?.plus(it) }
+            _phRange.value =  newPhRange
+            _tempRange.value = newTempRange
+            _clarityRange.value = newClarityRange
+            return true
+        }
+        return false
+    }
+
+    private fun checkRanges(oldLow: Double, oldHigh: Double, newLow: Double, newHigh: Double ): List<Double> {
+        val newRange = mutableListOf<Double>((-1).toDouble(), (-1).toDouble())
+        when{
+            (newLow >= oldLow) && (newLow <= oldHigh) ->  newRange[0] = newLow
+            (newLow < oldLow) -> newRange[0] = oldLow
+            else -> newRange[0] = (-1).toDouble()
+        }
+        when{
+            (newHigh <= oldHigh) && (newHigh >= oldLow) ->  newRange[1] = newHigh
+            (newHigh > oldHigh) -> newRange[1] = oldHigh
+            else -> newRange[1] = (-1).toDouble()
+        }
+
+        return newRange
+    }
 
     fun eventFishAngel(){
         onPreset()
         _whichFish.value = 0
-        _phRange.value = listOf(6.8f,7.8f)
-        _tempRange.value = listOf(76f,85f)
-        _clarityRange.value = listOf(0f,25f)
+        _phRange.value = listOf(6.8,7.8)
+        _tempRange.value = listOf(76.0,85.0)
+        _clarityRange.value = listOf(0.0,25.0)
     }
     fun eventFishBetta(){
         onPreset()
         _whichFish.value = 1
-        _phRange.value = listOf(6.8f,7.5f)
-        _tempRange.value = listOf(78f,80f)
-        _clarityRange.value = listOf(0f,25f)
+        _phRange.value = listOf(6.8,7.5)
+        _tempRange.value = listOf(78.0,80.0)
+        _clarityRange.value = listOf(0.0,25.0)
     }
     fun eventFishGold(){
         onPreset()
         _whichFish.value = 2
-        _phRange.value = listOf(7.2f,7.6f)
-        _tempRange.value = listOf(68f,74f)
-        _clarityRange.value = listOf(0f,25f)
+        _phRange.value = listOf(7.2,7.6)
+        _tempRange.value = listOf(68.0,74.0)
+        _clarityRange.value = listOf(0.0,25.0)
     }
     fun eventFishGuppies(){
         onPreset()
         _whichFish.value = 3
-        _phRange.value = listOf(6.8f,7.8f)
-        _tempRange.value = listOf(72f,78f)
-        _clarityRange.value = listOf(0f,25f)
+        _phRange.value = listOf(6.8,7.8)
+        _tempRange.value = listOf(72.0,78.0)
+        _clarityRange.value = listOf(0.0,25.0)
     }
     fun eventFishMollies(){
         onPreset()
         _whichFish.value = 4
-        _phRange.value = listOf(7.5f,8.5f)
-        _tempRange.value = listOf(72f,78f)
-        _clarityRange.value = listOf(0f,25f)
+        _phRange.value = listOf(7.5,8.5)
+        _tempRange.value = listOf(72.0,78.0)
+        _clarityRange.value = listOf(0.0,25.0)
     }
     fun eventFishNeon(){
         onPreset()
         _whichFish.value = 5
-        _phRange.value = listOf(6.0f,7.0f)
-        _tempRange.value = listOf(70f,81f)
-        _clarityRange.value = listOf(0f,25f)
+        _phRange.value = listOf(6.0,7.0)
+        _tempRange.value = listOf(70.0,81.0)
+        _clarityRange.value = listOf(0.0,25.0)
     }
 
     private fun onPreset() {
@@ -169,6 +195,9 @@ class SharedSetupViewModel(private val repository: Repository): ViewModel() {
     }
     fun eventConfirmComplete(){
         _eventConfirm.value = false
+    }
+    fun updateFishNum(newFishNum: Int){
+        _fishNum.value = newFishNum
     }
 
 }

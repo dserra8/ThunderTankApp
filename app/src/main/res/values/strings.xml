@@ -37,6 +37,8 @@
     <string name="pH_ranges_format">%.1f - %.1f pH</string>
     <string name="temp_ranges_format">%.1f - %.1f \u2109</string>
     <string name="clarity_ranges_format">%.1f - %.1f NTU</string>
+    <string name="num_fishes_format">%d Fishes</string>
+    <string name="feeding_rate_format">%.1f g/Day</string>
 
 
 

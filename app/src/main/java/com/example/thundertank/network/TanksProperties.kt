@@ -29,13 +29,13 @@ data class StringTanksRanges(
 data class TanksRanges(
     val id: Int,
     val fishNum: Int,
-    val feedingRate: Float,
-    val tempLow: Float,
-    val tempHigh: Float,
-    val phLow: Float,
-    val phHigh: Float,
-    val clarityLow: Float,
-    val clarityHigh: Float
+    val feedingRate: Double,
+    val tempLow: Double,
+    val tempHigh: Double,
+    val phLow: Double,
+    val phHigh: Double,
+    val clarityLow: Double,
+    val clarityHigh: Double
 )
 
 data class PostResponse (

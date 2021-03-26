@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
@@ -19,7 +20,7 @@ class FinalHomeScreen : Fragment() {
 
     private lateinit var binding: FinalHomeScreenBinding
     private lateinit var viewModelFactory: SharedSetupViewModelFactory
-    private val viewModel: SharedSetupViewModel by activityViewModels {viewModelFactory}
+    private val viewModel: SharedSetupViewModel by activityViewModels { viewModelFactory }
 
 
     override fun onCreateView(
@@ -42,18 +43,40 @@ class FinalHomeScreen : Fragment() {
         binding.lifecycleOwner = this
 
         viewModel.eventConfirm.observe(viewLifecycleOwner, Observer { confirm ->
-            if(confirm == true) {
-                var configurationChange = false
-                var fromConfirm = true
-                viewModel.getRecentRanges()
-               // viewModel.mergeRanges()
+            if (confirm == true) {
                 viewModel.eventConfirmComplete()
-               // viewModel.postRanges()
-                if(viewModel.postResponse.value?.success == "1") {
-                    configurationChange = true
-                    saveData()
-                }
-                findNavController().navigate(FinalHomeScreenDirections.actionFinalHomeScreenToHomeScreenFragment(configurationChange,fromConfirm ))
+                viewModel.getRecentRanges()
+            }
+        })
+
+        viewModel.getResponse.observe(viewLifecycleOwner, Observer {
+            if (viewModel.mergeRanges()) {
+                viewModel.updateFishNum(binding.editFishAmount.text.toString().toInt())
+                viewModel.postRanges()
+            } else {
+                Toast.makeText(
+                    context, "Merge Unsuccessful, Fish Incompatible",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        })
+
+        viewModel.postResponse.observe(viewLifecycleOwner, Observer {
+            if (viewModel.postResponse.value?.success == "1") {
+                var configurationChange = true
+                var fromConfirm = true
+                saveData()
+                findNavController().navigate(
+                    FinalHomeScreenDirections.actionFinalHomeScreenToHomeScreenFragment(
+                        configurationChange,
+                        fromConfirm
+                    )
+                )
+            } else {
+                Toast.makeText(
+                    context, "Merged Successfully, Post: ${viewModel.postResponse.value?.success} ${viewModel.postResponse.value?.message}",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         })
         // Inflate the layout for this fragment
@@ -67,4 +90,6 @@ class FinalHomeScreen : Fragment() {
         editor?.putInt("numFish", viewModel.fishNum.value!!)
         editor?.apply()
     }
+
+
 }

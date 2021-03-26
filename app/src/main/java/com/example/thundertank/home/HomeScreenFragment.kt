@@ -5,6 +5,7 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -51,7 +52,7 @@ class HomeScreenFragment : Fragment() {
         binding.lifecycleOwner = this
 
 
-       // loadData()
+        loadData()
         val phDrawable: LayerDrawable = binding.phProgressBar.progressDrawable as LayerDrawable
         val phShape: Drawable = phDrawable.findDrawableByLayerId(R.id.phShape)
 
@@ -75,23 +76,25 @@ class HomeScreenFragment : Fragment() {
             }
         }
 
+        binding.swipeRefresh.setOnRefreshListener {
+            viewModel.getRecentRanges()
+            binding.swipeRefresh.isRefreshing = false
+        }
 
-//        viewModel.postResponse.observe(viewLifecycleOwner, Observer { response ->
-//
-//            Toast.makeText(context,"Success: ${response.success} Message: ${response.message}", Toast.LENGTH_SHORT).show()
-//
-//        })
+        viewModel.postResponse.observe(viewLifecycleOwner, Observer { response ->
+
+            Toast.makeText(context,"Success: ${response.success} Message: ${response.message}", Toast.LENGTH_SHORT).show()
+
+        })
         viewModel.getResponse.observe(viewLifecycleOwner, Observer { response ->
-
-            Toast.makeText(
-                context, response.temp,
-                Toast.LENGTH_SHORT
-            ).show()
-
             viewModel.updateProperties(response.pH, response.temp,
                      response.clear)
+        })
 
-
+        viewModel.getRanges.observe(viewLifecycleOwner, Observer { response ->
+            viewModel.updateRanges(response.phLow, response.phHigh,
+                response.tempLow, response.tempHigh, response.clarityLow, response.clarityHigh,
+                response.fishNum, response.feedingRate)
         })
 
         //observe methods for changing progress bar colors
@@ -124,6 +127,13 @@ class HomeScreenFragment : Fragment() {
         editor?.putFloat("ph", viewModel.pH.value!!)
         editor?.putFloat("temp", viewModel.temp.value!!)
         editor?.putFloat("clarity", viewModel.clarity.value!!)
+        editor?.putFloat("phLow", viewModel.phRange.value?.get(0)!!)
+        editor?.putFloat("phHigh", viewModel.phRange.value?.get(1)!!)
+        editor?.putFloat("tempLow", viewModel.tempRange.value?.get(0)!!)
+        editor?.putFloat("tempHigh", viewModel.tempRange.value?.get(1)!!)
+        editor?.putFloat("clarityLow", viewModel.clarityRange.value?.get(0)!!)
+        editor?.putFloat("clarityHigh", viewModel.clarityRange.value?.get(1)!!)
+        editor?.putFloat("feedingRate", viewModel.feedingRate.value!!)
         editor?.apply()
     }
 
@@ -133,11 +143,23 @@ class HomeScreenFragment : Fragment() {
         val ph = sp?.getFloat("ph", 0F)
         val temp = sp?.getFloat("temp", 0F)
         val clarity = sp?.getFloat("clarity", 0F)
-        viewModel.restoreValues(ph,temp,clarity)
+        val fishNum = sp?.getInt("numFish", 0)
+        val phLow = sp?.getFloat("phLow", 0F)
+        val phHigh = sp?.getFloat("phHigh", 0F)
+        val tempLow = sp?.getFloat("tempLow", 0F)
+        val tempHigh = sp?.getFloat("tempHigh", 0F)
+        val clarityHigh = sp?.getFloat("clarityHigh", 0F)
+        val clarityLow = sp?.getFloat("clarityLow", 0F)
+        val feedingRate = sp?.getFloat("feedingRate", 0F)
+
+        if (phLow != null && phHigh != null && tempLow != null && tempHigh != null && clarityLow != null && clarityHigh != null) {
+                viewModel.restoreValues(ph,temp,clarity, fishNum, feedingRate, phLow, phHigh, tempLow, tempHigh, clarityLow, clarityHigh)
+            }
     }
 
+
     override fun onDestroy() {
-       // saveData()
+        saveData()
         super.onDestroy()
     }
 }

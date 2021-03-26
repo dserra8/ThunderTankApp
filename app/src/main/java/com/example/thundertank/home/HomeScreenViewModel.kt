@@ -10,9 +10,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.thundertank.network.PostResponse
-import com.example.thundertank.network.StringTanksProperties
-import com.example.thundertank.network.TanksProperties
+import com.example.thundertank.network.*
 import com.example.thundertank.repository.Repository
 import kotlinx.coroutines.*
 
@@ -28,6 +26,10 @@ class HomeScreenViewModel(private val repository: Repository): ViewModel() {
     private val _getResponse = MutableLiveData<StringTanksProperties>()
     val getResponse: LiveData<StringTanksProperties>
         get() = _getResponse
+
+    private val _getRanges = MutableLiveData<StringTanksRanges>()
+    val getRanges: LiveData<StringTanksRanges>
+        get() = _getRanges
 
     //Ranges for the different values
     private val _tempRange = MutableLiveData<List<Float>>()
@@ -59,24 +61,28 @@ class HomeScreenViewModel(private val repository: Repository): ViewModel() {
     val clarity: LiveData<Float>
         get() = _clarity
 
+    //LiveData for temperature
+    private val _fishNum = MutableLiveData<Int>()
+    val fishNum: LiveData<Int>
+        get() = _fishNum
 
-   // private var repeatCall: Job
+    //LiveData for temperature
+    private val _feedingRate = MutableLiveData<Float>()
+    val feedingRate: LiveData<Float>
+        get() = _feedingRate
+
+
+    private lateinit var repeatCall: Job
+   // private lateinit var repeatRangesCall: Job
     private var viewModelJob = Job()
     private val coroutineScope= CoroutineScope(viewModelJob + Dispatchers.Main)
 
 
     init {
+        _phRange.value = listOf(0f,0f)
+        _tempRange.value = listOf(0f,0f)
+        _clarityRange.value = listOf(0f,0f)
 
-        Log.i("model", "ViewModel Created")
-//        _pH.value = 10.0f
-//        _temp.value = 80.0f
-//        _clarity.value = 0.4f
-
-        _phRange.value = listOf(9.5f,10.5f)
-        _tempRange.value = listOf(70f,80f)
-        _clarityRange.value = listOf(.5f,5f)
-      //  repeatCall = startReceivingJob(3000)
-        getTanksProperties()
     }
 
     private fun startReceivingJob(timeInterval: Long): Job{
@@ -88,6 +94,15 @@ class HomeScreenViewModel(private val repository: Repository): ViewModel() {
             }
         }
     }
+    private fun startReceivingRanges(timeInterval: Long): Job{
+        return CoroutineScope(Dispatchers.Default).launch {
+            while (isActive) {
+                // add your task here
+                getRecentRanges()
+                delay(timeInterval)
+            }
+        }
+    }
     private fun getTanksProperties() {
         coroutineScope.launch {
             var getPropertiesDeferred = repository.getPropertiesAsync()
@@ -95,8 +110,18 @@ class HomeScreenViewModel(private val repository: Repository): ViewModel() {
                 var result = getPropertiesDeferred.await()
                 _getResponse.value = result
             } catch (e: Exception) {
-               // _response.value = "Failure: ${e.message}"
-                _getResponse.value = StringTanksProperties("1","1","1")
+              // _getResponse.value = StringTanksProperties("${e.message}","1","1")
+            }
+        }
+    }
+
+    fun getRecentRanges() {
+        coroutineScope.launch {
+            var getRangesDeferred = repository.getRangesAsync()
+            try {
+                var result = getRangesDeferred.await()
+                _getRanges.value = result
+            } catch (e: Exception) {
 
             }
         }
@@ -128,16 +153,28 @@ class HomeScreenViewModel(private val repository: Repository): ViewModel() {
         _clarity.value = clarity.toFloat()
 
     }
+    fun updateRanges(phLow: String, phHigh: String,  tempLow: String, tempHigh: String, clarityLow: String, clarityHigh: String, fishNum: String, feedingRate: String){
+        _phRange.value = listOf(phLow.toFloat(), phHigh.toFloat())
+        _tempRange.value = listOf(tempLow.toFloat(), tempHigh.toFloat())
+        _clarityRange.value = listOf(clarityLow.toFloat(), clarityHigh.toFloat())
+        _fishNum.value = fishNum.toInt()
+        _feedingRate.value = feedingRate.toFloat()
+    }
 
-    fun restoreValues(ph: Float?,temp: Float?,clarity: Float?){
+    fun restoreValues(ph: Float?,temp: Float?,clarity: Float?, fishNum: Int?, feedingRate: Float?, phLow: Float, phHigh : Float, tempLow: Float, tempHigh: Float, clarityLow: Float, clarityHigh: Float){
         _pH.value = ph
         _temp.value = temp
         _clarity.value = clarity
-        //repeatCall = startReceivingJob(3000)
+        _phRange.value = listOf(phLow, phHigh)
+        _tempRange.value = listOf(tempLow, tempHigh)
+        _clarityRange.value = listOf(clarityLow, clarityHigh)
+        _fishNum.value = fishNum
+        _feedingRate.value = feedingRate
+        getRecentRanges()
+        repeatCall = startReceivingJob(5000)
     }
     override fun onCleared() {
-      //  repeatCall.cancel()
-        Log.i("model", "ViewModel Destroyed")
+        repeatCall.cancel()
         super.onCleared()
     }
 }

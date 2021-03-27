@@ -24,11 +24,6 @@ class SharedSetupViewModel(private val repository: Repository): ViewModel() {
     val getResponse: LiveData<StringTanksRanges>
         get() = _getResponse
 
-    private val _getResponseNum = MutableLiveData<TanksRanges>()
-    val getResponseNum: LiveData<TanksRanges>
-        get() = _getResponseNum
-
-
     private val _fishNum = MutableLiveData<Int>()
     val fishNum: LiveData<Int>
         get() = _fishNum
@@ -116,7 +111,7 @@ class SharedSetupViewModel(private val repository: Repository): ViewModel() {
 
         if (newTempRange[0] != -1.0 && newTempRange[1] != -1.0 && newPhRange[0] != -1.0 && newPhRange[1] != -1.0 && newClarityRange[0] != -1.0 && newClarityRange[1] != -1.0)
         {
-            _fishNum.value = _getResponseNum.value?.fishNum?.let { _fishNum.value?.plus(it) }
+            _fishNum.value = _getResponse.value?.fishNum?.toInt()?.plus(_fishNum.value!!)
             _phRange.value =  newPhRange
             _tempRange.value = newTempRange
             _clarityRange.value = newClarityRange

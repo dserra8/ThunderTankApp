@@ -44,28 +44,32 @@ class FinalHomeScreen : Fragment() {
 
         viewModel.eventConfirm.observe(viewLifecycleOwner, Observer { confirm ->
             if (confirm == true) {
-                viewModel.eventConfirmComplete()
                 viewModel.getRecentRanges()
             }
         })
 
         viewModel.getResponse.observe(viewLifecycleOwner, Observer {
-            if (viewModel.mergeRanges()) {
+
+            if (viewModel.eventConfirm.value != false) {
                 viewModel.updateFishNum(binding.editFishAmount.text.toString().toInt())
-                viewModel.postRanges()
-            } else {
-                Toast.makeText(
-                    context, "Merge Unsuccessful, Fish Incompatible",
-                    Toast.LENGTH_SHORT
-                ).show()
+                if(viewModel.mergeRanges())
+                    viewModel.postRanges()
+                else{
+                    viewModel.eventConfirmComplete()
+                    Toast.makeText(
+                        context, "Merge Unsuccessful, Fish Incompatible",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
         })
 
         viewModel.postResponse.observe(viewLifecycleOwner, Observer {
-            if (viewModel.postResponse.value?.success == "1") {
+            if (viewModel.postResponse.value?.success == "1" && viewModel.eventConfirm.value != false) {
                 var configurationChange = true
                 var fromConfirm = true
                 saveData()
+                viewModel.eventConfirmComplete()
                 findNavController().navigate(
                     FinalHomeScreenDirections.actionFinalHomeScreenToHomeScreenFragment(
                         configurationChange,
@@ -73,6 +77,7 @@ class FinalHomeScreen : Fragment() {
                     )
                 )
             } else {
+                viewModel.eventConfirmComplete()
                 Toast.makeText(
                     context, "Merged Successfully, Post: ${viewModel.postResponse.value?.success} ${viewModel.postResponse.value?.message}",
                     Toast.LENGTH_SHORT

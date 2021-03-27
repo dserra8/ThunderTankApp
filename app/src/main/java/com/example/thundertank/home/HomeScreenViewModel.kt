@@ -110,7 +110,7 @@ class HomeScreenViewModel(private val repository: Repository): ViewModel() {
                 var result = getPropertiesDeferred.await()
                 _getResponse.value = result
             } catch (e: Exception) {
-              // _getResponse.value = StringTanksProperties("${e.message}","1","1")
+               _getResponse.value = StringTanksProperties("${e.message}","0","0")
             }
         }
     }

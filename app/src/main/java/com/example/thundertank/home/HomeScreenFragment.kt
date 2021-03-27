@@ -87,6 +87,9 @@ class HomeScreenFragment : Fragment() {
 
         })
         viewModel.getResponse.observe(viewLifecycleOwner, Observer { response ->
+
+           // Toast.makeText(context,"Error: ${response.temp} ", Toast.LENGTH_LONG).show()
+
             viewModel.updateProperties(response.pH, response.temp,
                      response.clear)
         })

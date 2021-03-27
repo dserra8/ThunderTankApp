@@ -10,14 +10,14 @@ import retrofit2.http.POST
 
 
 interface TankApiService {
-    @GET("android_connect/db_view.php")
+    @GET("tofromapp/db_view.php")
     fun getPropertiesAsync(): Deferred<StringTanksProperties>
 
-    @GET("android_connect/db_view_row_ranges.php")
+    @GET("tofromapp/db_view_row_ranges.php")
     fun getRangesAsync(): Deferred<StringTanksRanges>
 
     @Headers("Content-Type: application/json")
-    @POST("android_connect/db_update_row_ranges.php")
+    @POST("tofromapp/db_update_row_ranges.php")
     fun pushRangesAsync(
         @Body post: TanksRanges
     ): Deferred<PostResponse>

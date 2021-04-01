@@ -3,7 +3,7 @@
     <dimen name="box_text_size">16sp</dimen>
     <dimen name="progress_text_size">15sp</dimen>
     <dimen name="box_width">150dp</dimen>
-    <dimen name="corners">5dp</dimen>
+    <dimen name="corners">10dp</dimen>
     <dimen name="progress_bar_width">110dp</dimen>
     <dimen name="progress_bar_height">110dp</dimen>
     <dimen name="space_between_buttons">20dp</dimen>

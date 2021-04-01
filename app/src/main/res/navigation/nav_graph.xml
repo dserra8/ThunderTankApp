@@ -66,4 +66,9 @@
             android:id="@+id/action_setupOther_to_finalHomeScreen"
             app:destination="@id/finalHomeScreen" />
     </fragment>
+    <fragment
+        android:id="@+id/settingsScreenFragment"
+        android:name="com.example.thundertank.settings.SettingsScreenFragment"
+        android:label="Settings"
+        tools:layout="@layout/settings_screen_fragment" />
 </navigation>

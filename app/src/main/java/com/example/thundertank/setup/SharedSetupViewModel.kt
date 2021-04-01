@@ -60,6 +60,7 @@ class SharedSetupViewModel(private val repository: Repository): ViewModel() {
         get() = _whichFish
 
 
+    lateinit var fishPicked: String
     var id: Int = 1
     var error: String = ""
     private var viewModelJob = Job()
@@ -67,6 +68,7 @@ class SharedSetupViewModel(private val repository: Repository): ViewModel() {
 
     init {
 
+        fishPicked = ""
     }
 
     fun postRanges() {
@@ -138,6 +140,7 @@ class SharedSetupViewModel(private val repository: Repository): ViewModel() {
 
     fun eventFishAngel(){
         onPreset()
+        fishPicked = "Angel"
         _whichFish.value = 0
         _phRange.value = listOf(6.8,7.8)
         _tempRange.value = listOf(76.0,85.0)
@@ -145,6 +148,7 @@ class SharedSetupViewModel(private val repository: Repository): ViewModel() {
     }
     fun eventFishBetta(){
         onPreset()
+        fishPicked = "Betta"
         _whichFish.value = 1
         _phRange.value = listOf(6.8,7.5)
         _tempRange.value = listOf(78.0,80.0)
@@ -152,6 +156,7 @@ class SharedSetupViewModel(private val repository: Repository): ViewModel() {
     }
     fun eventFishGold(){
         onPreset()
+        fishPicked = "Gold"
         _whichFish.value = 2
         _phRange.value = listOf(7.2,7.6)
         _tempRange.value = listOf(68.0,74.0)
@@ -159,6 +164,7 @@ class SharedSetupViewModel(private val repository: Repository): ViewModel() {
     }
     fun eventFishGuppies(){
         onPreset()
+        fishPicked = "Guppie"
         _whichFish.value = 3
         _phRange.value = listOf(6.8,7.8)
         _tempRange.value = listOf(72.0,78.0)
@@ -166,6 +172,7 @@ class SharedSetupViewModel(private val repository: Repository): ViewModel() {
     }
     fun eventFishMollies(){
         onPreset()
+        fishPicked = "Mollie"
         _whichFish.value = 4
         _phRange.value = listOf(7.5,8.5)
         _tempRange.value = listOf(72.0,78.0)
@@ -173,6 +180,7 @@ class SharedSetupViewModel(private val repository: Repository): ViewModel() {
     }
     fun eventFishNeon(){
         onPreset()
+        fishPicked = "Neon Tetra"
         _whichFish.value = 5
         _phRange.value = listOf(6.0,7.0)
         _tempRange.value = listOf(70.0,81.0)

@@ -9,6 +9,13 @@ data class TanksProperties(
     val clear: Float
 )
 
+data class FeedingRate(
+    val rotations: Int
+)
+data class StringFeedingRate(
+    val rotationsApp: Int,
+    val rotationsPi: Int
+)
 data class StringTanksProperties(
     val temp: String,
     val pH: String,

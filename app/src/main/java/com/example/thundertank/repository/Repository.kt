@@ -12,8 +12,15 @@ class Repository {
     fun getRangesAsync(): Deferred<StringTanksRanges>{
         return RetrofitInstance.api.getRangesAsync()
     }
+    fun getFeedingRateAsync(): Deferred<StringFeedingRate>{
+        return RetrofitInstance.api.getFeedingRateAsync()
+    }
     fun pushRangesAsync(post: TanksRanges): Deferred<PostResponse>{
         return RetrofitInstance.api.pushRangesAsync(post)
     }
+    fun pushFeedingRateAsync(post: FeedingRate): Deferred<PostResponse>{
+        return RetrofitInstance.api.pushFeedingRateAsync(post)
+    }
+
 
 }

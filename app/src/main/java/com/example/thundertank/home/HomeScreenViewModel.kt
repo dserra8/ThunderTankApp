@@ -18,11 +18,8 @@ import retrofit2.Response
 import kotlin.math.floor
 
 class HomeScreenViewModel(private val repository: Repository): ViewModel() {
-    private val _postResponse = MutableLiveData<PostResponse>()
-    val postResponse: LiveData<PostResponse>
-        get() = _postResponse
 
-    // The internal MutableLiveData String that stores the status of the most recent request
+     // The internal MutableLiveData String that stores the status of the most recent request
     private val _getResponse = MutableLiveData<StringTanksProperties>()
     val getResponse: LiveData<StringTanksProperties>
         get() = _getResponse
@@ -94,15 +91,7 @@ class HomeScreenViewModel(private val repository: Repository): ViewModel() {
             }
         }
     }
-    private fun startReceivingRanges(timeInterval: Long): Job{
-        return CoroutineScope(Dispatchers.Default).launch {
-            while (isActive) {
-                // add your task here
-                getRecentRanges()
-                delay(timeInterval)
-            }
-        }
-    }
+
     private fun getTanksProperties() {
         coroutineScope.launch {
             var getPropertiesDeferred = repository.getPropertiesAsync()
@@ -143,9 +132,6 @@ class HomeScreenViewModel(private val repository: Repository): ViewModel() {
         return Color.RED
     }
 
-    fun onClickTest(newNum: Editable){
-        _pH.value = newNum.toString().toFloat()
-    }
 
     fun updateProperties(pH: String, temp: String, clarity: String){
         _pH.value = pH.toFloat()

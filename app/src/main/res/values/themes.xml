@@ -4,7 +4,7 @@
         <!-- Primary brand color. -->
 
         <item name="colorPrimaryVariant">@color/navy_blue</item>
-        <item name="colorPrimary">@color/dark_blue</item>
+        <item name="colorPrimary">@color/setting_button_color</item>
         <item name="colorOnPrimary">@color/light_red</item>
 
         <!-- Secondary brand color. -->

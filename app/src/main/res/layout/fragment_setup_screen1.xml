@@ -27,7 +27,8 @@
             android:text="@string/ChooseFish"
             android:textColor="@color/white"
             android:textSize="24sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:paddingBottom="40sp"/>
 
         <ScrollView
             android:id="@+id/scrollView"
@@ -41,51 +42,51 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="40dp">
+                >
 
                 <Button
-                    android:id="@+id/button3"
-                    style="@style/fishButton"
+                    android:id="@+id/angelButton"
+                    style="@style/settingsButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/AngelFishPresetText"
-                    android:onClick="@{() -> viewModel.eventFishAngel()}"/>
+                    android:onClick="@{() -> viewModel.eventFishAngel()}"
+                    android:text="@string/AngelFishPresetText" />
 
                 <Button
-                    android:id="@+id/button4"
-                    style="@style/fishButton"
+                    android:id="@+id/bettaButton"
+                    style="@style/settingsButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/BettaPresetText"
                     android:onClick="@{() -> viewModel.eventFishBetta()}"/>
 
                 <Button
-                    android:id="@+id/button5"
-                    style="@style/fishButton"
+                    android:id="@+id/goldButton"
+                    style="@style/settingsButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/GoldFishPresetText"
                     android:onClick="@{() -> viewModel.eventFishGold()}"/>
 
                 <Button
-                    android:id="@+id/button6"
-                    style="@style/fishButton"
+                    android:id="@+id/guppieButton"
+                    style="@style/settingsButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/GuppiesPresetText"
                     android:onClick="@{() -> viewModel.eventFishGuppies()}"/>
 
                 <Button
-                    android:id="@+id/button7"
-                    style="@style/fishButton"
+                    android:id="@+id/mollieButton"
+                    style="@style/settingsButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/MolliesPresetText"
                     android:onClick="@{() -> viewModel.eventFishMollies()}"/>
 
                 <Button
-                    android:id="@+id/button8"
-                    style="@style/fishButton"
+                    android:id="@+id/neonButton"
+                    style="@style/settingsButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/NeonTetraPresetText"
@@ -104,10 +105,10 @@
 
                 <Button
                     android:id="@+id/manualButton"
-                    style="@style/fishButton"
-                    android:layout_gravity="center"
-                    android:layout_width="wrap_content"
+                    style="@style/settingsButton"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:text="@string/manual_setup_button_text" />
             </LinearLayout>
         </ScrollView>

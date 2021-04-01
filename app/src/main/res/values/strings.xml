@@ -29,7 +29,7 @@
     <string name="NeonTetraPresetText">Neon Treta</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="manual_setup_button_text">Manual Setup</string>
-    <string name="how_many_fishes_text">How many of these fishes?</string>
+    <string name="how_many_fishes_text">How many Fishes?</string>
     <string name="confirm_text">Confirm</string>
     <string name="configurations_text">Configurations</string>
     <string name="enter_amount_text">Enter Amount</string>
@@ -39,7 +39,10 @@
     <string name="clarity_ranges_format">%.1f - %.1f NTU</string>
     <string name="num_fishes_format">%d Fishes</string>
     <string name="feeding_rate_format">%.1f g/Day</string>
-
+    <string name="reset_everything">Reset Everything</string>
+    <string name="settings_name">Settings</string>
+    <string name="add_fish_text">Add Fish</string>
+    <string name="home_text">Home</string>
 
 
 </resources>

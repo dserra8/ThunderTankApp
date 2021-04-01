@@ -2,6 +2,7 @@ package com.example.thundertank.home
 
 import android.R.attr.data
 import android.content.Context
+import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
 import android.os.Bundle
@@ -21,7 +22,7 @@ import com.example.thundertank.R
 import com.example.thundertank.databinding.HomeScreenBinding
 import com.example.thundertank.repository.Repository
 
-
+//android:networkSecurityConfig="@xml/network_security_config"
 /**
  * A simple [Fragment] subclass as the default destination in the navigation.
  */
@@ -37,7 +38,6 @@ class HomeScreenFragment : Fragment() {
                               savedInstanceState: Bundle?): View? {
 
         // Inflate view and obtain an instance of the binding class
-        Log.i("fragment", "created")
          binding = DataBindingUtil.inflate(
                 inflater,
                 R.layout.home_screen,
@@ -81,14 +81,9 @@ class HomeScreenFragment : Fragment() {
             binding.swipeRefresh.isRefreshing = false
         }
 
-        viewModel.postResponse.observe(viewLifecycleOwner, Observer { response ->
-
-            Toast.makeText(context,"Success: ${response.success} Message: ${response.message}", Toast.LENGTH_SHORT).show()
-
-        })
         viewModel.getResponse.observe(viewLifecycleOwner, Observer { response ->
 
-           // Toast.makeText(context,"Error: ${response.temp} ", Toast.LENGTH_LONG).show()
+         //  Toast.makeText(context,"Error: ${response.temp} ", Toast.LENGTH_LONG).show()
 
             viewModel.updateProperties(response.pH, response.temp,
                      response.clear)
@@ -102,17 +97,41 @@ class HomeScreenFragment : Fragment() {
 
         //observe methods for changing progress bar colors
         viewModel.pH.observe(viewLifecycleOwner, Observer {newPH ->
-            changeProgress((newPH*10).toInt(), binding.phProgressBar)
-            phShape.setTint(viewModel.changeProgressColor(viewModel.phRange.value?.get(0)!! ,viewModel.phRange.value?.get(1)!!, newPH))
+            if(viewModel.fishNum.value!! > 0){
+                changeProgress((newPH*10).toInt(), binding.phProgressBar)
+                phShape.setTint(viewModel.changeProgressColor(viewModel.phRange.value?.get(0)!! ,viewModel.phRange.value?.get(1)!!, newPH))
+            }
+            else
+                phShape.setTint(Color.GRAY)
         })
 
         viewModel.temp.observe(viewLifecycleOwner, Observer {newTemp ->
-            changeProgress((newTemp*10).toInt(), binding.tempProgressBar)
-            tempShape.setTint(viewModel.changeProgressColor(viewModel.tempRange.value?.get(0)!! ,viewModel.tempRange.value?.get(1)!!, newTemp))
+            if(viewModel.fishNum.value!! > 0) {
+                changeProgress((newTemp * 10).toInt(), binding.tempProgressBar)
+                tempShape.setTint(
+                    viewModel.changeProgressColor(
+                        viewModel.tempRange.value?.get(0)!!,
+                        viewModel.tempRange.value?.get(1)!!,
+                        newTemp
+                    )
+                )
+            }
+            else
+                tempShape.setTint(Color.GRAY)
         })
         viewModel.clarity.observe(viewLifecycleOwner, Observer {newClarity ->
-            changeProgress((newClarity*10).toInt(), binding.clarityProgressBar)
-            clarityShape.setTint(viewModel.changeProgressColor(viewModel.clarityRange.value?.get(0)!! ,viewModel.clarityRange.value?.get(1)!!, newClarity))
+            if(viewModel.fishNum.value!! > 0) {
+                changeProgress((newClarity * 10).toInt(), binding.clarityProgressBar)
+                clarityShape.setTint(
+                    viewModel.changeProgressColor(
+                        viewModel.clarityRange.value?.get(
+                            0
+                        )!!, viewModel.clarityRange.value?.get(1)!!, newClarity
+                    )
+                )
+            }
+            else
+                clarityShape.setTint(Color.GRAY)
         })
 
         // Inflate the layout for this fragment
@@ -137,6 +156,7 @@ class HomeScreenFragment : Fragment() {
         editor?.putFloat("clarityLow", viewModel.clarityRange.value?.get(0)!!)
         editor?.putFloat("clarityHigh", viewModel.clarityRange.value?.get(1)!!)
         editor?.putFloat("feedingRate", viewModel.feedingRate.value!!)
+        editor?.putInt("numFish", viewModel.fishNum.value!!)
         editor?.apply()
     }
 

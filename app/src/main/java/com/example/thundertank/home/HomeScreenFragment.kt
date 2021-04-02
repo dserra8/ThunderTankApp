@@ -37,6 +37,7 @@ class HomeScreenFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
+        Log.v("main", "OnCreate")
         // Inflate view and obtain an instance of the binding class
          binding = DataBindingUtil.inflate(
                 inflater,
@@ -101,8 +102,9 @@ class HomeScreenFragment : Fragment() {
                 changeProgress((newPH*10).toInt(), binding.phProgressBar)
                 phShape.setTint(viewModel.changeProgressColor(viewModel.phRange.value?.get(0)!! ,viewModel.phRange.value?.get(1)!!, newPH))
             }
-            else
-                phShape.setTint(Color.GRAY)
+            else{
+                changeProgress((newPH*10).toInt(), binding.phProgressBar)
+                phShape.setTint(Color.GRAY)}
         })
 
         viewModel.temp.observe(viewLifecycleOwner, Observer {newTemp ->
@@ -116,22 +118,21 @@ class HomeScreenFragment : Fragment() {
                     )
                 )
             }
-            else
-                tempShape.setTint(Color.GRAY)
+            else{
+                changeProgress((newTemp * 10).toInt(), binding.tempProgressBar)
+                tempShape.setTint(Color.GRAY)}
         })
         viewModel.clarity.observe(viewLifecycleOwner, Observer {newClarity ->
             if(viewModel.fishNum.value!! > 0) {
                 changeProgress((newClarity * 10).toInt(), binding.clarityProgressBar)
                 clarityShape.setTint(
-                    viewModel.changeProgressColor(
-                        viewModel.clarityRange.value?.get(
-                            0
-                        )!!, viewModel.clarityRange.value?.get(1)!!, newClarity
-                    )
+                    viewModel.changeClarity()
                 )
             }
-            else
+            else {
+                changeProgress((newClarity * 10).toInt(), binding.clarityProgressBar)
                 clarityShape.setTint(Color.GRAY)
+            }
         })
 
         // Inflate the layout for this fragment
@@ -182,7 +183,14 @@ class HomeScreenFragment : Fragment() {
 
 
     override fun onDestroy() {
-        saveData()
+        Log.v("main", "onDestroy")
+
         super.onDestroy()
+    }
+
+    override fun onStop() {
+        Log.v("main", "onStop")
+        saveData()
+        super.onStop()
     }
 }

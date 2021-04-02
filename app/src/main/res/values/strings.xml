@@ -16,7 +16,7 @@
 
     <string name="pH_format">%.1f pH</string>
     <string name="temp_format">%.1f \u2109</string>
-    <string name="clarity_format">%.1f NTU</string>
+    <string name="clarity_format">%s</string>
 
     <string name="welcome_text">Welcome</string>
     <string name="ChooseFish">Choose a fish!</string>

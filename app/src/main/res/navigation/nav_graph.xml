@@ -37,7 +37,9 @@
         tools:layout="@layout/final_home_screen">
         <action
             android:id="@+id/action_finalHomeScreen_to_homeScreenFragment"
-            app:destination="@id/homeScreenFragment">
+            app:destination="@id/homeScreenFragment"
+            app:popUpTo="@id/homeScreenFragment"
+            app:popUpToInclusive="true">
             <argument
                 android:name="configurationChange"
                 android:defaultValue="false"
@@ -47,6 +49,12 @@
                 android:defaultValue="false"
                 app:argType="boolean" />
         </action>
+        <action
+            android:id="@+id/action_finalHomeScreen_to_setupScreen1Fragment"
+            app:destination="@id/setupScreen1Fragment" />
+        <action
+            android:id="@+id/action_finalHomeScreen_to_setupOther"
+            app:destination="@id/setupOther" />
     </fragment>
     <fragment
         android:id="@+id/setupRanges"
@@ -56,6 +64,9 @@
         <action
             android:id="@+id/action_setupRanges_to_setupOther"
             app:destination="@id/setupOther" />
+        <action
+            android:id="@+id/action_setupRanges_to_setupScreen1Fragment"
+            app:destination="@id/setupScreen1Fragment" />
     </fragment>
     <fragment
         android:id="@+id/setupOther"
@@ -65,6 +76,9 @@
         <action
             android:id="@+id/action_setupOther_to_finalHomeScreen"
             app:destination="@id/finalHomeScreen" />
+        <action
+            android:id="@+id/action_setupOther_to_setupRanges"
+            app:destination="@id/setupRanges" />
     </fragment>
     <fragment
         android:id="@+id/settingsScreenFragment"

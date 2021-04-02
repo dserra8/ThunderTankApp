@@ -65,23 +65,26 @@ class FinalHomeScreen : Fragment() {
         })
 
         viewModel.postResponse.observe(viewLifecycleOwner, Observer {
-            if (viewModel.postResponse.value?.success == "1" && viewModel.eventConfirm.value != false) {
-                var configurationChange = true
-                var fromConfirm = true
-                saveData()
-                viewModel.eventConfirmComplete()
-                findNavController().navigate(
-                    FinalHomeScreenDirections.actionFinalHomeScreenToHomeScreenFragment(
-                        configurationChange,
-                        fromConfirm
+            if(viewModel.eventConfirm.value != false) {
+                if (viewModel.postResponse.value?.success == "1") {
+                    var configurationChange = true
+                    var fromConfirm = true
+                    saveData()
+                    viewModel.eventConfirmComplete()
+                    findNavController().navigate(
+                        FinalHomeScreenDirections.actionFinalHomeScreenToHomeScreenFragment(
+                            configurationChange,
+                            fromConfirm
+                        )
                     )
-                )
-            } else {
-                viewModel.eventConfirmComplete()
-                Toast.makeText(
-                    context, "Merged Successfully, Post: ${viewModel.postResponse.value?.success} ${viewModel.postResponse.value?.message}",
-                    Toast.LENGTH_SHORT
-                ).show()
+                } else {
+                    viewModel.eventConfirmComplete()
+                    Toast.makeText(
+                        context,
+                        "Post: ${viewModel.postResponse.value?.success} ${viewModel.postResponse.value?.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
         })
         // Inflate the layout for this fragment

@@ -65,7 +65,7 @@
                 style="@style/progressText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{@string/clarity_format(homeViewModel.clarity)}"
+                android:text="@{@string/clarity_format(homeViewModel.clarityText)}"
                 app:layout_constraintBottom_toBottomOf="@+id/clarityProgressBar"
                 app:layout_constraintEnd_toEndOf="@+id/clarityProgressBar"
                 app:layout_constraintStart_toStartOf="@+id/clarityProgressBar"
@@ -89,14 +89,15 @@
 
             <TextView
                 android:id="@+id/phText"
-                style="@style/mainBox"
-                android:layout_width="@dimen/box_width"
+                style="@style/settingsButton"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:cursorVisible="false"
                 android:text="@string/ph_level_text"
                 app:layout_constraintBottom_toTopOf="@+id/tempText"
-                app:layout_constraintStart_toStartOf="@+id/tempText"
+                app:layout_constraintEnd_toStartOf="@+id/phProgressBar"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tankName"
                 app:layout_constraintVertical_chainStyle="spread" />
 
@@ -116,13 +117,14 @@
 
             <TextView
                 android:id="@+id/tempText"
-                style="@style/mainBox"
-                android:layout_width="@dimen/box_width"
+                style="@style/settingsButton"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:text="@string/temperature_text"
                 app:layout_constraintBottom_toTopOf="@+id/clarityText"
-                app:layout_constraintStart_toStartOf="@+id/clarityText"
+                app:layout_constraintEnd_toStartOf="@+id/tempProgressBar"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/phText" />
 
             <ProgressBar
@@ -140,13 +142,14 @@
 
             <TextView
                 android:id="@+id/clarityText"
-                style="@style/mainBox"
-                android:layout_width="@dimen/box_width"
+                style="@style/settingsButton"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
                 android:text="@string/clarity_text"
                 app:layout_constraintBottom_toTopOf="@+id/fishNum"
-                app:layout_constraintStart_toStartOf="@+id/fishNum"
+                app:layout_constraintEnd_toStartOf="@+id/clarityProgressBar"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tempText" />
 
             <TextView

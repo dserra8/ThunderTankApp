@@ -59,6 +59,11 @@ class HomeScreenViewModel(private val repository: Repository): ViewModel() {
         get() = _clarity
 
     //LiveData for temperature
+    private val _clarityText = MutableLiveData<String>()
+    val clarityText: LiveData<String>
+        get() = _clarityText
+
+    //LiveData for temperature
     private val _fishNum = MutableLiveData<Int>()
     val fishNum: LiveData<Int>
         get() = _fishNum
@@ -116,6 +121,14 @@ class HomeScreenViewModel(private val repository: Repository): ViewModel() {
         }
     }
 
+    fun changeClarity(): Int{
+        return when(clarity.value!!){
+            in 0f..30f ->{ _clarityText.value = "CLEAN"; Color.GREEN}
+            in 31f..40f -> {_clarityText.value = "Slight Dirty"; Color.YELLOW}
+            in 40f..4000f -> {_clarityText.value = "DIRTY"; Color.RED}
+            else -> Color.GRAY
+        }
+    }
     fun changeProgressColor(start:Float,end:Float,current: Float): Int{
         var padding = (end-start)/4
         if (padding != 0.toFloat()) {

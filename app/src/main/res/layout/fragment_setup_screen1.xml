@@ -109,6 +109,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:onClick="@{() -> viewModel.onManualSetup()}"
                     android:text="@string/manual_setup_button_text" />
             </LinearLayout>
         </ScrollView>

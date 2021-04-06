@@ -25,6 +25,10 @@ class SettingsViewModel(private val repository: Repository): ViewModel() {
     val eventRESET: LiveData<Boolean>
         get() = _eventRESET
 
+    private val _eventChangeName = MutableLiveData<Boolean>()
+    val eventChangeName: LiveData<Boolean>
+        get() = _eventChangeName
+
     private var viewModelJob = Job()
     private val coroutineScope= CoroutineScope(viewModelJob + Dispatchers.Main)
 
@@ -53,5 +57,11 @@ class SettingsViewModel(private val repository: Repository): ViewModel() {
     }
     fun eventRESETcomplete(){
         _eventRESET.value = false
+    }
+    fun onChangeName(){
+        _eventChangeName.value = true
+    }
+    fun eventChangeNameComplete(){
+        _eventChangeName.value = false
     }
 }

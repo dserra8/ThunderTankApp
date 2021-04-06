@@ -1,14 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".setup.SetupRanges">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.example.thundertank.setup.SharedSetupViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:background="@color/main_background_color"
+        tools:context=".setup.SetupRanges">
 
-</FrameLayout>
+
+        <TextView
+            android:id="@+id/phHighText"
+            style="@style/settingsButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/ph_high_text"
+            app:layout_constraintBaseline_toBaselineOf="@+id/phHighNum"
+            app:layout_constraintEnd_toStartOf="@+id/phHighNum"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/phLowText"
+            style="@style/settingsButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/ph_low_text"
+            app:layout_constraintBaseline_toBaselineOf="@+id/phLowNum"
+            app:layout_constraintEnd_toStartOf="@+id/phLowNum"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <EditText
+            android:id="@+id/phLowNum"
+            style="@style/settingsButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/enter_amount_text"
+            android:inputType="numberDecimal"
+            app:layout_constraintBottom_toTopOf="@+id/phHighNum"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/phHighNum"
+            style="@style/settingsButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/enter_amount_text"
+            android:inputType="numberDecimal"
+            app:layout_constraintBottom_toTopOf="@+id/tempLowNum"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/phLowNum" />
+
+        <TextView
+            android:id="@+id/tempLowText"
+            style="@style/settingsButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/temp_low_text"
+            app:layout_constraintBaseline_toBaselineOf="@+id/tempLowNum"
+            app:layout_constraintEnd_toStartOf="@+id/tempLowNum"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/tempHighText"
+            style="@style/settingsButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/temp_high_text"
+            app:layout_constraintBaseline_toBaselineOf="@+id/tempHighNum"
+            app:layout_constraintEnd_toStartOf="@+id/tempHighNum"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <EditText
+            android:id="@+id/tempLowNum"
+            style="@style/settingsButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/enter_amount_text"
+            android:inputType="numberDecimal"
+            app:layout_constraintBottom_toTopOf="@+id/tempHighNum"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/phHighNum" />
+
+        <EditText
+            android:id="@+id/tempHighNum"
+            style="@style/settingsButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/enter_amount_text"
+            android:inputType="numberDecimal"
+            app:layout_constraintBottom_toTopOf="@+id/nextButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tempLowNum" />
+
+        <Button
+            android:id="@+id/nextButton"
+            style="@style/settingsButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/next"
+            android:onClick="@{() -> viewModel.onNextRanges()}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tempHighNum" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

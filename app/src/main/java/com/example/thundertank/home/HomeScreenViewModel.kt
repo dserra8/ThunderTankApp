@@ -24,6 +24,14 @@ class HomeScreenViewModel(private val repository: Repository): ViewModel() {
     val getResponse: LiveData<StringTanksProperties>
         get() = _getResponse
 
+    private val _getRotations = MutableLiveData<StringFeedingRate>()
+    val getRotations: LiveData<StringFeedingRate>
+        get() = _getRotations
+
+    private val _postResponse = MutableLiveData<PostResponse>()
+    val postResponse: LiveData<PostResponse>
+        get() = _postResponse
+
     private val _getRanges = MutableLiveData<StringTanksRanges>()
     val getRanges: LiveData<StringTanksRanges>
         get() = _getRanges
@@ -69,10 +77,21 @@ class HomeScreenViewModel(private val repository: Repository): ViewModel() {
         get() = _fishNum
 
     //LiveData for temperature
-    private val _feedingRate = MutableLiveData<Float>()
-    val feedingRate: LiveData<Float>
+    private val _feedingRate = MutableLiveData<Int>()
+    val feedingRate: LiveData<Int>
         get() = _feedingRate
 
+    private val _eventClarityPopUp = MutableLiveData<Boolean>()
+    val eventClarityPopUp: LiveData<Boolean>
+        get() = _eventClarityPopUp
+
+    private val _eventPhPopUp = MutableLiveData<Boolean>()
+    val eventPhPopUp: LiveData<Boolean>
+        get() = _eventPhPopUp
+
+    private val _eventTempPopUp = MutableLiveData<Boolean>()
+    val eventTempPopUp: LiveData<Boolean>
+        get() = _eventTempPopUp
 
     private lateinit var repeatCall: Job
    // private lateinit var repeatRangesCall: Job
@@ -84,7 +103,6 @@ class HomeScreenViewModel(private val repository: Repository): ViewModel() {
         _phRange.value = listOf(0f,0f)
         _tempRange.value = listOf(0f,0f)
         _clarityRange.value = listOf(0f,0f)
-
     }
 
     private fun startReceivingJob(timeInterval: Long): Job{
@@ -104,7 +122,34 @@ class HomeScreenViewModel(private val repository: Repository): ViewModel() {
                 var result = getPropertiesDeferred.await()
                 _getResponse.value = result
             } catch (e: Exception) {
-               _getResponse.value = StringTanksProperties("${e.message}","0","0")
+               _getResponse.value = StringTanksProperties("-1","-1","-1")
+            }
+        }
+    }
+
+    fun getRotations() {
+        coroutineScope.launch {
+            var getFeedingRateDeferred = repository.getFeedingRateAsync()
+            try {
+                var result = getFeedingRateDeferred.await()
+                _getRotations.value = result
+            } catch (e: Exception) {
+                _getRotations.value = StringFeedingRate("-2")
+            }
+        }
+    }
+
+    fun postFeedingRate() {
+        coroutineScope.launch {
+            val obj = FeedingRate(1,fishNum.value!!)
+            var postFeedingRateDeferred = repository.pushFeedingRateAsync(obj)
+            try {
+                var result = postFeedingRateDeferred.await()
+                _postResponse.value = result
+            } catch (e: Exception) {
+                _postResponse.value?.success= "0"
+                _postResponse.value?.message= "Did not send"
+
             }
         }
     }
@@ -116,16 +161,19 @@ class HomeScreenViewModel(private val repository: Repository): ViewModel() {
                 var result = getRangesDeferred.await()
                 _getRanges.value = result
             } catch (e: Exception) {
-
+                _getRanges.value = StringTanksRanges("-1", "-1", "-1", "-1", "-1", "-1", "-1", "-1")
             }
         }
     }
 
     fun changeClarity(): Int{
+        val clarityLow = clarityRange.value?.get(0)!!
+        val clarityHigh = clarityRange.value?.get(1)!!
+        val medium = (clarityHigh-(clarityHigh*.25)).toFloat()
         return when(clarity.value!!){
-            in 0f..30f ->{ _clarityText.value = "CLEAN"; Color.GREEN}
-            in 31f..40f -> {_clarityText.value = "Slight Dirty"; Color.YELLOW}
-            in 40f..4000f -> {_clarityText.value = "DIRTY"; Color.RED}
+            in clarityLow .. medium->{ _clarityText.value = "CLEAN"; Color.parseColor("#fcf8f5") }
+            in medium..clarityHigh -> {_clarityText.value = "Approaching Dirtiness"; Color.YELLOW}
+            in clarityHigh..4000f -> {_clarityText.value = "DIRTY"; Color.RED}
             else -> Color.GRAY
         }
     }
@@ -144,23 +192,21 @@ class HomeScreenViewModel(private val repository: Repository): ViewModel() {
         }
         return Color.RED
     }
-
-
     fun updateProperties(pH: String, temp: String, clarity: String){
         _pH.value = pH.toFloat()
         _temp.value = temp.toFloat()
         _clarity.value = clarity.toFloat()
-
     }
-    fun updateRanges(phLow: String, phHigh: String,  tempLow: String, tempHigh: String, clarityLow: String, clarityHigh: String, fishNum: String, feedingRate: String){
+    fun updateFeedingRate(rotations: String){
+      _feedingRate.value = rotations.toInt()
+    }
+    fun updateRanges(phLow: String, phHigh: String,  tempLow: String, tempHigh: String, clarityLow: String, clarityHigh: String, fishNum: String){
         _phRange.value = listOf(phLow.toFloat(), phHigh.toFloat())
         _tempRange.value = listOf(tempLow.toFloat(), tempHigh.toFloat())
         _clarityRange.value = listOf(clarityLow.toFloat(), clarityHigh.toFloat())
         _fishNum.value = fishNum.toInt()
-        _feedingRate.value = feedingRate.toFloat()
     }
-
-    fun restoreValues(ph: Float?,temp: Float?,clarity: Float?, fishNum: Int?, feedingRate: Float?, phLow: Float, phHigh : Float, tempLow: Float, tempHigh: Float, clarityLow: Float, clarityHigh: Float){
+    fun restoreValues(ph: Float?,temp: Float?,clarity: Float?, fishNum: Int?, feedingRate: Int?, phLow: Float, phHigh : Float, tempLow: Float, tempHigh: Float, clarityLow: Float, clarityHigh: Float){
         _pH.value = ph
         _temp.value = temp
         _clarity.value = clarity
@@ -171,6 +217,27 @@ class HomeScreenViewModel(private val repository: Repository): ViewModel() {
         _feedingRate.value = feedingRate
         getRecentRanges()
         repeatCall = startReceivingJob(5000)
+    }
+
+    fun onClarityPopUp() {
+        _eventClarityPopUp.value = true
+    }
+    fun eventClarityPopUpComplete(){
+        _eventClarityPopUp.value = false
+    }
+
+    fun onPhPopUp() {
+        _eventPhPopUp.value = true
+    }
+    fun eventPhPopUpComplete(){
+        _eventPhPopUp.value = false
+    }
+
+    fun onTempPopUp() {
+        _eventTempPopUp.value = true
+    }
+    fun eventTempPopUpComplete(){
+        _eventTempPopUp.value = false
     }
     override fun onCleared() {
         repeatCall.cancel()

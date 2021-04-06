@@ -30,9 +30,10 @@
 
         <TextView
             android:id="@+id/tempConfiguration"
-            style="@style/configurationNumbers"
-            android:layout_width="wrap_content"
+            style="@style/settingsButton"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:ems="10"
             android:text="@{@string/temp_ranges_format(viewModel.tempRange[0], viewModel.tempRange[1])}"
             app:layout_constraintBottom_toBottomOf="@+id/tempImage"
             app:layout_constraintEnd_toEndOf="parent"
@@ -42,73 +43,74 @@
 
         <TextView
             android:id="@+id/configuration_text"
-            style="@style/configurationText"
-            android:layout_width="wrap_content"
+            style="@style/settingsButton"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
             android:text="@string/configurations_text"
             android:textAllCaps="true"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:textColor="#FFFFFF"
             android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/fish_amount_text"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/ph_configuration_text"
-            style="@style/configurationText"
-            android:layout_width="wrap_content"
+            style="@style/settingsButton"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/ph_level_text"
             android:textColor="#FFFFFF"
             app:layout_constraintBottom_toTopOf="@+id/clarity_configuration_text"
-            app:layout_constraintStart_toStartOf="@+id/tempImage"
+            app:layout_constraintEnd_toStartOf="@+id/phConfiguration"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tempImage" />
 
         <TextView
             android:id="@+id/phConfiguration"
-            style="@style/configurationNumbers"
+            style="@style/settingsButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:ems="10"
             android:text="@{@string/pH_ranges_format(viewModel.phRange[0], viewModel.phRange[1])}"
             android:textAlignment="textStart"
-            app:layout_constraintBottom_toBottomOf="@+id/ph_configuration_text"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/ph_configuration_text"
-            app:layout_constraintTop_toTopOf="@+id/ph_configuration_text" />
+            app:layout_constraintBaseline_toBaselineOf="@+id/ph_configuration_text"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <TextView
             android:id="@+id/clarity_configuration_text"
-            style="@style/configurationText"
-            android:layout_width="wrap_content"
+            style="@style/settingsButton"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/clarity_text"
             app:layout_constraintBottom_toTopOf="@+id/confirmButton"
-            app:layout_constraintStart_toStartOf="@+id/ph_configuration_text"
+            app:layout_constraintEnd_toStartOf="@+id/clarityConfiguration"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ph_configuration_text" />
 
         <TextView
             android:id="@+id/clarityConfiguration"
-            style="@style/configurationNumbers"
+            style="@style/settingsButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:ems="10"
+            android:textAlignment="textStart"
             android:text="@{@string/clarity_ranges_format(viewModel.clarityRange[0], viewModel.clarityRange[1])}"
-            app:layout_constraintBottom_toBottomOf="@+id/clarity_configuration_text"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/clarity_configuration_text"
-            app:layout_constraintTop_toTopOf="@+id/clarity_configuration_text" />
+            app:layout_constraintBaseline_toBaselineOf="@+id/clarity_configuration_text"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <EditText
             android:id="@+id/edit_fish_amount"
+            style="@style/settingsButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="24dp"
             android:autofillHints=""
-            android:ems="3"
+            android:ems="10"
             android:hint="@string/enter_amount_text"
             android:inputType="number"
             app:layout_constraintBottom_toBottomOf="@+id/fish_amount_text"
@@ -121,29 +123,29 @@
         <TextView
             android:id="@+id/fish_amount_text"
 
+            style="@style/settingsButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
             android:fontFamily="@font/candal"
             android:text="@string/how_many_fishes_text"
             android:textColor="#FFFFFF"
-            tools:text="How many Gold Fishes?"
             app:layout_constraintBottom_toTopOf="@+id/tempImage"
             app:layout_constraintEnd_toStartOf="@+id/edit_fish_amount"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/configuration_text" />
+            app:layout_constraintTop_toBottomOf="@+id/configuration_text"
+            tools:text="How many Gold Fishes?" />
 
         <Button
             android:id="@+id/confirmButton"
             style="@style/settingsButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
             android:onClick="@{() -> viewModel.onConfirm()}"
             android:text="@string/confirm_text"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/clarity_configuration_text" />
     </androidx.constraintlayout.widget.ConstraintLayout>

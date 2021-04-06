@@ -43,9 +43,16 @@ class SetupScreen1Fragment : Fragment() {
         binding.lifecycleOwner = this
 
         viewModel.eventPreset.observe(viewLifecycleOwner, Observer { choosePreset ->
-            if(choosePreset == true) {
+            if(choosePreset) {
                 viewModel.eventPresetComplete()
                 findNavController().navigate(SetupScreen1FragmentDirections.actionSetupScreen1FragmentToFinalHomeScreen())
+            }
+        })
+
+        viewModel.eventManualSetup.observe(viewLifecycleOwner, Observer{ event ->
+            if(event){
+                viewModel.eventManualSetupComplete()
+                findNavController().navigate(SetupScreen1FragmentDirections.actionSetupScreen1FragmentToSetupRanges())
             }
         })
         // Inflate the layout for this fragment

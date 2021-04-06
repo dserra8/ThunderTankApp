@@ -10,11 +10,11 @@ data class TanksProperties(
 )
 
 data class FeedingRate(
+    val id: Int,
     val rotations: Int
 )
 data class StringFeedingRate(
-    val rotationsApp: Int,
-    val rotationsPi: Int
+    val rotations: String
 )
 data class StringTanksProperties(
     val temp: String,

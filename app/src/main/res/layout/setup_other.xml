@@ -1,14 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".setup.SetupOther">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.example.thundertank.setup.SharedSetupViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:background="@color/main_background_color"
+        tools:context=".setup.SetupRanges">
 
-</FrameLayout>
+
+        <TextView
+            android:id="@+id/turbidityHighText"
+            style="@style/settingsButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/turbidity_high"
+            app:layout_constraintBaseline_toBaselineOf="@+id/turbidityHighNum"
+            app:layout_constraintEnd_toStartOf="@+id/turbidityHighNum"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/turbidityLowText"
+            style="@style/settingsButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/turbidity_low"
+            app:layout_constraintBaseline_toBaselineOf="@+id/turbidityLowNum"
+            app:layout_constraintEnd_toStartOf="@+id/turbidityLowNum"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <EditText
+            android:id="@+id/turbidityLowNum"
+            style="@style/settingsButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            android:ems="10"
+            android:inputType="numberDecimal"
+            android:text="@string/zero"
+            app:layout_constraintBottom_toTopOf="@+id/turbidityHighNum"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <EditText
+            android:id="@+id/turbidityHighNum"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/enter_amount_text"
+            android:inputType="numberDecimal"
+            style="@style/settingsButton"
+            app:layout_constraintBottom_toTopOf="@+id/nextOtherButton"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/turbidityLowNum" />
+
+
+        <Button
+            android:id="@+id/nextOtherButton"
+            style="@style/settingsButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="32dp"
+            android:onClick="@{() -> viewModel.onNextOther()}"
+            android:text="@string/next"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/turbidityHighNum" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

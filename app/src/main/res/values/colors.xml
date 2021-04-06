@@ -16,4 +16,5 @@
     <color name="main_background_color">#55A5EC</color>
     <color name="setting_button_color">#74B6F1</color>
     <color name="dark_blue">#164268</color>
+    <color name="turbidity_1">#597696</color>
 </resources>

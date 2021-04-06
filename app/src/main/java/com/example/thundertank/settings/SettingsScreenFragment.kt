@@ -1,11 +1,15 @@
 package com.example.thundertank.settings
 
+import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
@@ -42,8 +46,23 @@ class SettingsScreenFragment : Fragment() {
         binding.lifecycleOwner = this
 
         viewModel.eventRESET.observe(viewLifecycleOwner, Observer { Reset ->
-            if (Reset == true) {
+            if (Reset) {
                 viewModel.postReset()
+            }
+        })
+
+        viewModel.eventChangeName.observe(viewLifecycleOwner, Observer { event ->
+            if (event) {
+                viewModel.eventChangeNameComplete()
+                val dialog = LayoutInflater.from(context).inflate(R.layout.change_name, null)
+                val mBuilder = AlertDialog.Builder(context).setView(dialog)
+                val mAlertDialog = mBuilder.show()
+                val button = dialog.findViewById<Button>(R.id.enter_button)
+                button.setOnClickListener {
+                    val newName = dialog.findViewById<EditText>(R.id.new_name).text.toString()
+                    saveName(newName)
+                    mAlertDialog.dismiss()
+                }
             }
         })
 
@@ -79,6 +98,13 @@ class SettingsScreenFragment : Fragment() {
         editor?.putFloat("clarityLow", 0f)
         editor?.putFloat("clarityHigh", 40f)
         editor?.putFloat("feedingRate", 0f)
+        editor?.apply()
+    }
+    private fun saveName(name: String) {
+        val sharedPreferences =
+            this.activity?.getSharedPreferences("other", Context.MODE_PRIVATE)
+        val editor = sharedPreferences?.edit()
+        editor?.putString("tankName", name)
         editor?.apply()
     }
 }

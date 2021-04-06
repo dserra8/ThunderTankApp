@@ -34,6 +34,13 @@
                 android:onClick="@{() -> viewModel.onRESET()}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/settingsButton"
+                android:onClick="@{() -> viewModel.onChangeName()}"
+                android:text="@string/change_tank_name"
+                android:textAlignment="viewStart"/>
 
         </LinearLayout>
     </ScrollView>

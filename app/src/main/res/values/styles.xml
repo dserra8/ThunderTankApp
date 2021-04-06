@@ -67,4 +67,13 @@
         <item name="android:fontFamily">@font/candal</item>
     </style>
 
+    <style name="dialogText" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:background">@drawable/dialog_text_drawable</item>
+        <item name="android:textSize">@dimen/box_text_size</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:fontFamily">@font/candal</item>
+    </style>
+
+
 </resources>

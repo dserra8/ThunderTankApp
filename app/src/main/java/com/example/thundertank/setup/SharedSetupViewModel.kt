@@ -55,26 +55,38 @@ class SharedSetupViewModel(private val repository: Repository): ViewModel() {
     val eventConfirm: LiveData<Boolean>
         get() = _eventConfirm
 
+    private val _eventNextRanges = MutableLiveData<Boolean>()
+    val eventNextRanges: LiveData<Boolean>
+        get() = _eventNextRanges
+
+    private val _eventNextOther = MutableLiveData<Boolean>()
+    val eventNextOther: LiveData<Boolean>
+        get() = _eventNextOther
+
+    private val _eventManualSetup = MutableLiveData<Boolean>()
+    val eventManualSetup: LiveData<Boolean>
+        get() = _eventManualSetup
+
+
     private val _whichFish = MutableLiveData<Int>()
     val whichFish: LiveData<Int>
         get() = _whichFish
 
 
-    lateinit var fishPicked: String
+    private var fishPicked: String
     var id: Int = 1
     var error: String = ""
     private var viewModelJob = Job()
     private val coroutineScope= CoroutineScope(viewModelJob + Dispatchers.Main)
 
     init {
-
         fishPicked = ""
     }
 
     fun postRanges() {
         coroutineScope.launch {
             val obj = TanksRanges(id, fishNum.value!!, 3.0, tempRange.value?.get(0)!!, tempRange.value?.get(1)!!,
-                phRange.value?.get(0)!!, phRange.value?.get(1)!!, clarityRange.value?.get(0)!!, clarityRange.value?.get(0)!!)
+                phRange.value?.get(0)!!, phRange.value?.get(1)!!, clarityRange.value?.get(0)!!, clarityRange.value?.get(1)!!)
             var postRangesDeferred = repository.pushRangesAsync(obj)
             try {
                 var result = postRangesDeferred.await()
@@ -134,7 +146,6 @@ class SharedSetupViewModel(private val repository: Repository): ViewModel() {
             (newHigh > oldHigh) -> newRange[1] = oldHigh
             else -> newRange[1] = (-1).toDouble()
         }
-
         return newRange
     }
 
@@ -144,7 +155,7 @@ class SharedSetupViewModel(private val repository: Repository): ViewModel() {
         _whichFish.value = 0
         _phRange.value = listOf(6.8,7.8)
         _tempRange.value = listOf(76.0,85.0)
-        _clarityRange.value = listOf(0.0,25.0)
+        _clarityRange.value = listOf(0.0,40.0)
     }
     fun eventFishBetta(){
         onPreset()
@@ -152,7 +163,7 @@ class SharedSetupViewModel(private val repository: Repository): ViewModel() {
         _whichFish.value = 1
         _phRange.value = listOf(6.8,7.5)
         _tempRange.value = listOf(78.0,80.0)
-        _clarityRange.value = listOf(0.0,25.0)
+        _clarityRange.value = listOf(0.0,40.0)
     }
     fun eventFishGold(){
         onPreset()
@@ -160,7 +171,7 @@ class SharedSetupViewModel(private val repository: Repository): ViewModel() {
         _whichFish.value = 2
         _phRange.value = listOf(7.2,7.6)
         _tempRange.value = listOf(68.0,74.0)
-        _clarityRange.value = listOf(0.0,25.0)
+        _clarityRange.value = listOf(0.0,40.0)
     }
     fun eventFishGuppies(){
         onPreset()
@@ -168,7 +179,7 @@ class SharedSetupViewModel(private val repository: Repository): ViewModel() {
         _whichFish.value = 3
         _phRange.value = listOf(6.8,7.8)
         _tempRange.value = listOf(72.0,78.0)
-        _clarityRange.value = listOf(0.0,25.0)
+        _clarityRange.value = listOf(0.0,40.0)
     }
     fun eventFishMollies(){
         onPreset()
@@ -176,7 +187,7 @@ class SharedSetupViewModel(private val repository: Repository): ViewModel() {
         _whichFish.value = 4
         _phRange.value = listOf(7.5,8.5)
         _tempRange.value = listOf(72.0,78.0)
-        _clarityRange.value = listOf(0.0,25.0)
+        _clarityRange.value = listOf(0.0,40.0)
     }
     fun eventFishNeon(){
         onPreset()
@@ -184,9 +195,16 @@ class SharedSetupViewModel(private val repository: Repository): ViewModel() {
         _whichFish.value = 5
         _phRange.value = listOf(6.0,7.0)
         _tempRange.value = listOf(70.0,81.0)
-        _clarityRange.value = listOf(0.0,25.0)
+        _clarityRange.value = listOf(0.0,40.0)
     }
 
+    fun updateRanges(phLow: Double, phHigh: Double, tempLow: Double, tempHigh: Double){
+        _phRange.value = listOf(phLow,phHigh)
+        _tempRange.value = listOf(tempLow,tempHigh)
+    }
+    fun updateOther(turbidityLow: Double, turbidityHigh: Double){
+        _clarityRange.value = listOf(turbidityLow,turbidityHigh)
+    }
     private fun onPreset() {
         _eventPreset.value = true
     }
@@ -199,8 +217,25 @@ class SharedSetupViewModel(private val repository: Repository): ViewModel() {
     fun eventConfirmComplete(){
         _eventConfirm.value = false
     }
+    fun onNextRanges() {
+        _eventNextRanges.value = true
+    }
+    fun eventNextRangesComplete(){
+        _eventNextRanges.value = false
+    }
+    fun onNextOther() {
+        _eventNextOther.value = true
+    }
+    fun eventNextOtherComplete(){
+        _eventNextOther.value = false
+    }
+    fun onManualSetup() {
+        _eventManualSetup.value = true
+    }
+    fun eventManualSetupComplete(){
+        _eventManualSetup.value = false
+    }
     fun updateFishNum(newFishNum: Int){
         _fishNum.value = newFishNum
     }
-
 }

@@ -44,4 +44,6 @@
 
 
         app:menu="@menu/bottom_menu" />
+
+
 </LinearLayout>

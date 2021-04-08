@@ -17,16 +17,18 @@
         android:layout_height="match_parent"
         android:background="@color/main_background_color">
 
-        <ImageView
-            android:id="@+id/tempImage"
-            android:layout_width="109dp"
-            android:layout_height="102dp"
-            android:layout_weight="1"
-            android:src="@drawable/ic_temp_icon"
-            app:layout_constraintBottom_toTopOf="@+id/ph_configuration_text"
-            app:layout_constraintHorizontal_chainStyle="spread"
-            app:layout_constraintStart_toStartOf="@+id/fish_amount_text"
-            app:layout_constraintTop_toBottomOf="@+id/fish_amount_text" />
+        <TextView
+            android:id="@+id/temp_level_text"
+            style="@style/settingsButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/temperature_level_text"
+            android:textColor="#FFFFFF"
+            app:layout_constraintBottom_toTopOf="@+id/clarity_configuration_text"
+            app:layout_constraintEnd_toStartOf="@+id/tempConfiguration"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ph_configuration_text" />
 
         <TextView
             android:id="@+id/tempConfiguration"
@@ -35,11 +37,9 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:text="@{@string/temp_ranges_format(viewModel.tempRange[0], viewModel.tempRange[1])}"
-            app:layout_constraintBottom_toBottomOf="@+id/tempImage"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/tempImage"
-            app:layout_constraintTop_toTopOf="@+id/tempImage" />
+            tools:text="60.8-70.8 F"
+            app:layout_constraintBaseline_toBaselineOf="@+id/temp_level_text"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <TextView
             android:id="@+id/configuration_text"
@@ -64,11 +64,11 @@
             android:layout_height="wrap_content"
             android:text="@string/ph_level_text"
             android:textColor="#FFFFFF"
-            app:layout_constraintBottom_toTopOf="@+id/clarity_configuration_text"
+            app:layout_constraintBottom_toTopOf="@+id/temp_level_text"
             app:layout_constraintEnd_toStartOf="@+id/phConfiguration"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tempImage" />
+            app:layout_constraintTop_toBottomOf="@+id/fish_amount_text" />
 
         <TextView
             android:id="@+id/phConfiguration"
@@ -77,7 +77,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:text="@{@string/pH_ranges_format(viewModel.phRange[0], viewModel.phRange[1])}"
-            android:textAlignment="textStart"
+            tools:text="6.8-7.8 pH"
             app:layout_constraintBaseline_toBaselineOf="@+id/ph_configuration_text"
             app:layout_constraintEnd_toEndOf="parent" />
 
@@ -91,7 +91,7 @@
             app:layout_constraintEnd_toStartOf="@+id/clarityConfiguration"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ph_configuration_text" />
+            app:layout_constraintTop_toBottomOf="@+id/temp_level_text" />
 
         <TextView
             android:id="@+id/clarityConfiguration"
@@ -99,10 +99,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:textAlignment="textStart"
             android:text="@{@string/clarity_ranges_format(viewModel.clarityRange[0], viewModel.clarityRange[1])}"
             app:layout_constraintBaseline_toBaselineOf="@+id/clarity_configuration_text"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:text="6.8-7.8 pH"/>
 
         <EditText
             android:id="@+id/edit_fish_amount"
@@ -129,7 +129,7 @@
             android:fontFamily="@font/candal"
             android:text="@string/how_many_fishes_text"
             android:textColor="#FFFFFF"
-            app:layout_constraintBottom_toTopOf="@+id/tempImage"
+            app:layout_constraintBottom_toTopOf="@+id/ph_configuration_text"
             app:layout_constraintEnd_toStartOf="@+id/edit_fish_amount"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"

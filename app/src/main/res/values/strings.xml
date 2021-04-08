@@ -56,6 +56,7 @@
     <string name="enter_name">Enter Name</string>
     <string name="new_name">New Name</string>
     <string name="enter">Enter</string>
+    <string name="temperature_level_text">Temperature Level</string>
 
 
 </resources>

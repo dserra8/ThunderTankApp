@@ -16,10 +16,12 @@ import kotlinx.coroutines.*
 
 import retrofit2.Response
 import kotlin.math.floor
+import kotlin.properties.Delegates
+import kotlin.random.Random
 
-class HomeScreenViewModel(private val repository: Repository): ViewModel() {
+class HomeScreenViewModel(private val repository: Repository) : ViewModel() {
 
-     // The internal MutableLiveData String that stores the status of the most recent request
+    // The internal MutableLiveData String that stores the status of the most recent request
     private val _getResponse = MutableLiveData<StringTanksProperties>()
     val getResponse: LiveData<StringTanksProperties>
         get() = _getResponse
@@ -93,19 +95,62 @@ class HomeScreenViewModel(private val repository: Repository): ViewModel() {
     val eventTempPopUp: LiveData<Boolean>
         get() = _eventTempPopUp
 
+    private val _eventFab = MutableLiveData<Boolean>()
+    val eventFab: LiveData<Boolean>
+        get() = _eventFab
+
+    private val _eventNextTip = MutableLiveData<Boolean>()
+    val eventNextTip: LiveData<Boolean>
+        get() = _eventNextTip
+
+    private val _currentTip = MutableLiveData<String>()
+    val currentTip: LiveData<String>
+        get() = _currentTip
+
+    private val _currentVideo = MutableLiveData<String>()
+    val currentVideo: LiveData<String>
+        get() = _currentVideo
+
+    var index: Int = 0
+
+    private var tipsVideo = mutableListOf(
+        "7fybZjqVgq4", //1: Water Change
+        "ZagBfWiAwlk", // Maintain Fish Tank
+        "dkTwdtySxOc", //Heater guide
+        "",
+        "",
+        "J1DVP8-garg", //Regulate pH
+        "BU8Umtj39DE" // Algea
+    )
+    private var tipsArray = mutableListOf(
+        "Treat tap water with Water Conditioner before using it to fill your aquarium",
+        "Different fish require different amounts of water to stay happy and healthy."
+                + "A good rule of thumb for small fish is one gallon of water per inch of fish, " +
+                "but larger fish can break this rule. Some Koi require 250 gallons per fish!",
+        "To avoid harmful bacterial buildup, keep your tank between 65 and 85 degrees fahrenheit. " +
+                "Tropical fish like water temperatures of 75 to 80 degrees fahrenheit.\n",
+        "An air pump helps re-oxygenate the water of your aquarium and spread heat around",
+        "Many filters come with bacteria cultures to help neutralize ammonia, make sure to change it often!",
+        "Ammonia is naturally accumulated by waste. If you see your clarity dropping and pH rising, it might be time to cycle your water.",
+        "Video that will help you get rid of Algae"
+    )
+
     private lateinit var repeatCall: Job
-   // private lateinit var repeatRangesCall: Job
+
+    // private lateinit var repeatRangesCall: Job
     private var viewModelJob = Job()
-    private val coroutineScope= CoroutineScope(viewModelJob + Dispatchers.Main)
+    private val coroutineScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
 
     init {
-        _phRange.value = listOf(0f,0f)
-        _tempRange.value = listOf(0f,0f)
-        _clarityRange.value = listOf(0f,0f)
+        _currentTip.value = tipsArray[0]
+        _currentVideo.value = tipsVideo[0]
+        _phRange.value = listOf(0f, 0f)
+        _tempRange.value = listOf(0f, 0f)
+        _clarityRange.value = listOf(0f, 0f)
     }
 
-    private fun startReceivingJob(timeInterval: Long): Job{
+    private fun startReceivingJob(timeInterval: Long): Job {
         return CoroutineScope(Dispatchers.Default).launch {
             while (isActive) {
                 // add your task here
@@ -122,7 +167,7 @@ class HomeScreenViewModel(private val repository: Repository): ViewModel() {
                 var result = getPropertiesDeferred.await()
                 _getResponse.value = result
             } catch (e: Exception) {
-               _getResponse.value = StringTanksProperties("-1","-1","-1")
+                _getResponse.value = StringTanksProperties("-1", "-1", "-1")
             }
         }
     }
@@ -141,14 +186,14 @@ class HomeScreenViewModel(private val repository: Repository): ViewModel() {
 
     fun postFeedingRate() {
         coroutineScope.launch {
-            val obj = FeedingRate(1,fishNum.value!!)
+            val obj = FeedingRate(1, fishNum.value!!)
             var postFeedingRateDeferred = repository.pushFeedingRateAsync(obj)
             try {
                 var result = postFeedingRateDeferred.await()
                 _postResponse.value = result
             } catch (e: Exception) {
-                _postResponse.value?.success= "0"
-                _postResponse.value?.message= "Did not send"
+                _postResponse.value?.success = "0"
+                _postResponse.value?.message = "Did not send"
 
             }
         }
@@ -166,47 +211,79 @@ class HomeScreenViewModel(private val repository: Repository): ViewModel() {
         }
     }
 
-    fun changeClarity(): Int{
+    //Color.parseColor("#fcf8f5")
+    fun changeClarity(): Int {
         val clarityLow = clarityRange.value?.get(0)!!
         val clarityHigh = clarityRange.value?.get(1)!!
-        val medium = (clarityHigh-(clarityHigh*.25)).toFloat()
-        return when(clarity.value!!){
-            in clarityLow .. medium->{ _clarityText.value = "CLEAN"; Color.parseColor("#fcf8f5") }
-            in medium..clarityHigh -> {_clarityText.value = "Approaching Dirtiness"; Color.YELLOW}
-            in clarityHigh..4000f -> {_clarityText.value = "DIRTY"; Color.RED}
+        val medium = (clarityHigh - (clarityHigh * .25)).toFloat()
+        return when (clarity.value!!) {
+            in clarityLow..medium -> {
+                _clarityText.value = "CLEAN"; Color.GREEN
+            }
+            in medium..clarityHigh -> {
+                _clarityText.value = "Approaching Dirtiness"; Color.YELLOW
+            }
+            in clarityHigh..4000f -> {
+                _clarityText.value = "DIRTY"; Color.RED
+            }
             else -> Color.GRAY
         }
     }
-    fun changeProgressColor(start:Float,end:Float,current: Float): Int{
-        var padding = (end-start)/4
+
+    fun changeProgressColor(start: Float, end: Float, current: Float): Int {
+        var padding = (end - start) / 4
         if (padding != 0.toFloat()) {
-            return when(current){
-                in start+padding..end-padding -> Color.GREEN
-                in start..start+padding -> Color.YELLOW
-                in end-padding..end -> Color.YELLOW
+            return when (current) {
+                in start + padding..end - padding -> Color.GREEN
+                in start..start + padding -> Color.YELLOW
+                in end - padding..end -> Color.YELLOW
                 else -> Color.RED
             }
-        }
-        else{
+        } else {
             if (current == end && current == start) return Color.GREEN
         }
         return Color.RED
     }
-    fun updateProperties(pH: String, temp: String, clarity: String){
+
+    fun updateProperties(pH: String, temp: String, clarity: String) {
         _pH.value = pH.toFloat()
         _temp.value = temp.toFloat()
         _clarity.value = clarity.toFloat()
     }
-    fun updateFeedingRate(rotations: String){
-      _feedingRate.value = rotations.toInt()
+
+    fun updateFeedingRate(rotations: String) {
+        _feedingRate.value = rotations.toInt()
+        _fishNum.value = rotations.toInt()
     }
-    fun updateRanges(phLow: String, phHigh: String,  tempLow: String, tempHigh: String, clarityLow: String, clarityHigh: String, fishNum: String){
+
+    fun updateRanges(
+        phLow: String,
+        phHigh: String,
+        tempLow: String,
+        tempHigh: String,
+        clarityLow: String,
+        clarityHigh: String,
+        fishNum: String
+    ) {
         _phRange.value = listOf(phLow.toFloat(), phHigh.toFloat())
         _tempRange.value = listOf(tempLow.toFloat(), tempHigh.toFloat())
         _clarityRange.value = listOf(clarityLow.toFloat(), clarityHigh.toFloat())
         _fishNum.value = fishNum.toInt()
     }
-    fun restoreValues(ph: Float?,temp: Float?,clarity: Float?, fishNum: Int?, feedingRate: Int?, phLow: Float, phHigh : Float, tempLow: Float, tempHigh: Float, clarityLow: Float, clarityHigh: Float){
+
+    fun restoreValues(
+        ph: Float?,
+        temp: Float?,
+        clarity: Float?,
+        fishNum: Int?,
+        feedingRate: Int?,
+        phLow: Float,
+        phHigh: Float,
+        tempLow: Float,
+        tempHigh: Float,
+        clarityLow: Float,
+        clarityHigh: Float
+    ) {
         _pH.value = ph
         _temp.value = temp
         _clarity.value = clarity
@@ -219,26 +296,80 @@ class HomeScreenViewModel(private val repository: Repository): ViewModel() {
         repeatCall = startReceivingJob(5000)
     }
 
+    private fun resetTips() {
+
+        tipsArray = mutableListOf(
+            "Treat tap water with Water Conditioner before using it to fill your aquarium",
+            "Different fish require different amounts of water to stay happy and healthy."
+                    + " A good rule of thumb for small fish is one gallon of water per inch of fish, " +
+                    "but larger fish can break this rule. Some Koi require 250 gallons per fish!",
+            "To avoid harmful bacterial buildup, keep your tank between 65 and 85 degrees fahrenheit. " +
+                    "Tropical fish like water temperatures of 75 to 80 degrees fahrenheit.\n",
+            "An air pump helps re-oxygenate the water of your aquarium and spread heat around",
+            "Many filters come with bacteria cultures to help neutralize ammonia, make sure to change it often!",
+            "Ammonia is naturally accumulated by waste. If you see your clarity dropping and pH rising, it might be time to cycle your water."
+        )
+        tipsVideo = mutableListOf(
+            "7fybZjqVgq4", //1: Water Change
+            "ZagBfWiAwlk", // Maintain Fish Tank
+            "dkTwdtySxOc", //Heater guide
+            "",
+            "",
+            "J1DVP8-garg", //Regulate pH
+            "BU8Umtj39DE" // Algea
+        )
+    }
+
+    fun nextTip() {
+        index = Random.nextInt(tipsArray.size)
+        _currentTip.value = tipsArray[index]
+        _currentVideo.value = tipsVideo[index]
+        tipsArray.removeAt(index)
+        tipsVideo.removeAt(index)
+        if (tipsArray.size == 0)
+            resetTips()
+    }
+
     fun onClarityPopUp() {
         _eventClarityPopUp.value = true
     }
-    fun eventClarityPopUpComplete(){
+
+    fun eventClarityPopUpComplete() {
         _eventClarityPopUp.value = false
     }
 
     fun onPhPopUp() {
         _eventPhPopUp.value = true
     }
-    fun eventPhPopUpComplete(){
+
+    fun eventPhPopUpComplete() {
         _eventPhPopUp.value = false
     }
 
     fun onTempPopUp() {
         _eventTempPopUp.value = true
     }
-    fun eventTempPopUpComplete(){
+
+    fun eventTempPopUpComplete() {
         _eventTempPopUp.value = false
     }
+
+    fun onFab() {
+        _eventFab.value = true
+    }
+
+    fun eventFabComplete() {
+        _eventFab.value = false
+    }
+
+    fun onNextTip() {
+        _eventNextTip.value = true
+    }
+
+    fun eventNextTipComplete() {
+        _eventNextTip.value = false
+    }
+
     override fun onCleared() {
         repeatCall.cancel()
         super.onCleared()

@@ -13,9 +13,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
-import android.widget.TextView
-import android.widget.Toast
+import android.widget.*
+import androidx.annotation.NonNull
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -24,6 +23,10 @@ import androidx.navigation.fragment.navArgs
 import com.example.thundertank.R
 import com.example.thundertank.databinding.HomeScreenBinding
 import com.example.thundertank.repository.Repository
+import com.google.android.material.snackbar.Snackbar
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
+import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
 
 //android:networkSecurityConfig="@xml/network_security_config"
 /**
@@ -89,6 +92,7 @@ class HomeScreenFragment : Fragment() {
         binding.swipeRefresh.setOnRefreshListener {
             viewModel.getRecentRanges()
             viewModel.getRotations()
+            viewModel.fishNum
             binding.swipeRefresh.isRefreshing = false
         }
 
@@ -101,6 +105,54 @@ class HomeScreenFragment : Fragment() {
                 view.text = "${viewModel.clarity.value} NTU"
                 val mAlertDialog = mBuilder.show()
 
+            }
+        })
+
+        viewModel.eventFab.observe(viewLifecycleOwner, Observer { event ->
+            if (event) {
+                viewModel.eventFabComplete()
+                val dialog = LayoutInflater.from(context).inflate(R.layout.tips_layout, null)
+                val mBuilder = AlertDialog.Builder(context).setView(dialog).setTitle("Tips")
+                val view = dialog.findViewById<TextView>(R.id.tips_text)
+                view.text = viewModel.currentTip.value
+                val mAlertDialog = mBuilder.show()
+                val button = dialog.findViewById<Button>(R.id.next_tip)
+                val videoView: YouTubePlayerView = dialog.findViewById<YouTubePlayerView>(R.id.youtube_player_view)
+
+                videoView.getPlayerUiController().showFullscreenButton(true)
+                videoView.addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
+                    override fun onReady(@NonNull youTubePlayer: YouTubePlayer) {
+                        val videoId = viewModel.currentVideo.value
+                        if (videoId != null) {
+                            youTubePlayer.cueVideo(videoId, 0f)
+                        }
+                    }
+                })
+
+//                videoView.getPlayerUiController().setFullScreenButtonClickListener(View.OnClickListener {
+//                    if (videoView.isFullScreen()) {
+//                        videoView.exitFullScreen()
+//                        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE
+//                        // Show ActionBar
+//                        if (supportActionBar != null) {
+//                            supportActionBar!!.show()
+//                        }
+//                    } else {
+//                        third_party_player_view.enterFullScreen()
+//                        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
+//                        // Hide ActionBar
+//                        if (supportActionBar != null) {
+//                            supportActionBar!!.hide()
+//                        }
+//                    }
+//                })
+
+                button.setOnClickListener {
+                    viewModel.nextTip()
+                    view.text = viewModel.currentTip.value
+
+
+            }
             }
         })
 
@@ -184,12 +236,12 @@ class HomeScreenFragment : Fragment() {
         })
         viewModel.clarity.observe(viewLifecycleOwner, Observer { newClarity ->
             if (viewModel.fishNum.value!! > 0) {
-                changeProgress((newClarity * 10).toInt(), binding.clarityProgressBar)
+                changeProgress(4000, binding.clarityProgressBar)
                 clarityShape.setTint(
                     viewModel.changeClarity()
                 )
             } else {
-                changeProgress((newClarity * 10).toInt(), binding.clarityProgressBar)
+                changeProgress(4000, binding.clarityProgressBar)
                 clarityShape.setTint(Color.GRAY)
             }
         })
